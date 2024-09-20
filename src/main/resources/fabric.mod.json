@@ -18,6 +18,9 @@
 		"main": [
 			"net.appledog.Appledog"
 		],
+		"client": [
+			"net.appledog.AppledogClient"
+		],
 		"fabric-datagen": [
 			"net.appledog.AppledogDataGenerator"
 		]
