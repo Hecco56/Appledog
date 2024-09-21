@@ -1,0 +1,17 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "appledog:item/dogapple"
+  },
+  "overrides": [
+    {
+      "predicate": { "animation": 0.5 }, "model": "appledog:item/dogapple_1"
+    },
+    {
+      "predicate": { "animation": 0.75 }, "model": "appledog:item/dogapple_2"
+    },
+    {
+      "predicate": { "animation": 1 }, "model": "appledog:item/dogapple_3"
+    }
+  ]
+}

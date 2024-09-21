@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:entity",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:apple",
+          "weight": 25
+        },
+        {
+          "type": "minecraft:item",
+          "name": "appledog:dogapple"
+        }
+      ],
+      "rolls": 1.0
+    }
+  ]
+}
