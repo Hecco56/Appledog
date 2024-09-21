@@ -1,27 +1,49 @@
 package net.appledog.entity;
 
+import com.mojang.serialization.Codec;
 import net.appledog.registry.ADEntities;
 import net.minecraft.block.BlockState;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.NbtComponent;
+import net.minecraft.entity.Bucketable;
+import net.minecraft.entity.EntityData;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.ai.pathing.PathNodeType;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.data.DataTracker;
+import net.minecraft.entity.data.TrackedData;
+import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.passive.WolfEntity;
+import net.minecraft.entity.passive.WolfVariant;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.StringIdentifiable;
+import net.minecraft.util.Util;
+import net.minecraft.util.function.ValueLists;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.random.Random;
+import net.minecraft.world.LocalDifficulty;
+import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
+import java.util.function.IntFunction;
+
 public class AppledogEntity extends AnimalEntity {
+    private static final TrackedData<Integer> VARIANT = DataTracker.registerData(AppledogEntity.class, TrackedDataHandlerRegistry.INTEGER);
     public AppledogEntity(EntityType<? extends AppledogEntity> entityType, World world) {
         super(entityType, world);
         this.setPathfindingPenalty(PathNodeType.POWDER_SNOW, -1.0F);
@@ -51,29 +73,118 @@ public class AppledogEntity extends AnimalEntity {
     @Nullable
     @Override
     public PassiveEntity createChild(ServerWorld world, PassiveEntity entity) {
-        //        if (childEntity != null && entity instanceof AppledogEntity entity2) {
-//            if (this.random.nextBoolean()) {
-//                childEntity.setVariant(this.getVariant());
-//            } else {
-//                childEntity.setVariant(entity2.getVariant());
-//            }
-//
-//            if (this.isTamed()) {
-//                childEntity.setOwnerUuid(this.getOwnerUuid());
-//                childEntity.setTamed(true, true);
-//                if (this.random.nextBoolean()) {
-//                    childEntity.setCollarColor(this.getCollarColor());
-//                } else {
-//                    childEntity.setCollarColor(entity2.getCollarColor());
-//                }
-//            }
-//        }
+        AppledogEntity childEntity = ADEntities.APPLEDOG.create(world);
+        if (childEntity != null && entity instanceof AppledogEntity entity2) {
+            if (this.random.nextBoolean()) {
+                childEntity.setVariant(this.getVariant());
+            } else {
+                switch (entity2.getVariant()) {
+                    case RED_DELICIOUS -> childEntity.setVariant(random.nextBoolean() ? Variant.MACOUN : Variant.PINK_LADY);
+                    case MACOUN -> childEntity.setVariant(random.nextBoolean() ? Variant.RED_DELICIOUS : Variant.GRANNY_SMITH);
+                    case PINK_LADY -> childEntity.setVariant(random.nextBoolean() ? Variant.RED_DELICIOUS : Variant.GOLDEN_DELICIOUS);
+                    case GRANNY_SMITH -> childEntity.setVariant(random.nextBoolean() ? Variant.MACOUN : Variant.GOLDEN_DELICIOUS);
+                    case GOLDEN_DELICIOUS -> childEntity.setVariant(random.nextBoolean() ? Variant.PINK_LADY : Variant.GRANNY_SMITH);
+                }
+            }
+        }
 
-        return ADEntities.APPLEDOG.create(world);
+        return childEntity;
     }
 
     protected SoundEvent getDeathSound() {
         return SoundEvents.ENTITY_WOLF_DEATH;
+    }
+
+    @Override
+    protected void initDataTracker(DataTracker.Builder builder) {
+        builder.add(VARIANT, 0);
+        super.initDataTracker(builder);
+    }
+
+    @Override
+    public void writeCustomDataToNbt(NbtCompound nbt) {
+        super.writeCustomDataToNbt(nbt);
+        nbt.putInt("Variant", this.getVariant().getId());
+    }
+
+    public void readCustomDataFromNbt(NbtCompound nbt) {
+        super.readCustomDataFromNbt(nbt);
+        this.setVariant(AppledogEntity.Variant.byId(nbt.getInt("Variant")));
+    }
+
+    public void setVariant(AppledogEntity.Variant variant) {
+        this.dataTracker.set(VARIANT, variant.getId());
+    }
+
+    public AppledogEntity.Variant getVariant() {
+        return AppledogEntity.Variant.byId(this.dataTracker.get(VARIANT));
+    }
+
+    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData) {
+        if (spawnReason == SpawnReason.SPAWN_EGG) {
+            Random random = world.getRandom();
+            if (entityData instanceof AppledogEntity.AppledogData) {
+            } else {
+                entityData = new AppledogEntity.AppledogData(Variant.getRandom(random), Variant.getRandom(random));
+            }
+
+            this.setVariant(((AppledogEntity.AppledogData)entityData).getRandomVariant(random));
+
+            return super.initialize(world, difficulty, spawnReason, entityData);
+        } else {
+            return entityData;
+        }
+    }
+
+    public static enum Variant implements StringIdentifiable {
+        RED_DELICIOUS(0, "red_delicious"),
+        GRANNY_SMITH(1, "granny_smith"),
+        GOLDEN_DELICIOUS(2, "golden_delicious"),
+        MACOUN(3, "macoun"),
+        PINK_LADY(4, "pink_lady");
+
+        private static final IntFunction<AppledogEntity.Variant> BY_ID = ValueLists.createIdToValueFunction(AppledogEntity.Variant::getId, values(), ValueLists.OutOfBoundsHandling.ZERO);
+        private final int id;
+        private final String name;
+
+        private Variant(final int id, final String name) {
+            this.id = id;
+            this.name = name;
+        }
+
+        public int getId() {
+            return this.id;
+        }
+
+        public String getName() {
+            return this.name;
+        }
+
+        public String asString() {
+            return this.name;
+        }
+
+        public static AppledogEntity.Variant byId(int id) {
+            return BY_ID.apply(id);
+        }
+
+        private static AppledogEntity.Variant getRandom(Random random) {
+            AppledogEntity.Variant[] variants = Arrays.stream(values()).toArray(Variant[]::new);
+            return Util.getRandom(variants, random);
+        }
+    }
+
+    public static class AppledogData extends PassiveEntity.PassiveData {
+        public final AppledogEntity.Variant[] variants;
+
+        public AppledogData(AppledogEntity.Variant... variants) {
+            super(false);
+            this.variants = variants;
+        }
+
+        public AppledogEntity.Variant getRandomVariant(Random random) {
+            return this.variants[random.nextInt(this.variants.length)];
+        }
     }
 
 }
