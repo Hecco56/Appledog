@@ -11,7 +11,7 @@ import net.minecraft.world.Heightmap;
 public class ADMobSpawns {
     public static void loadSpawns() {
         BiomeModifications.addSpawn(BiomeSelectors.all(),
-                SpawnGroup.CREATURE, ADEntities.APPLEDOG, 1500, 1, 1);
-        SpawnRestriction.register(ADEntities.APPLEDOG, SpawnLocationTypes.UNRESTRICTED, Heightmap.Type.OCEAN_FLOOR, AppledogEntity::canSpawn);
+                SpawnGroup.CREATURE, ADEntities.APPLEDOG, 2048, 1, 1);
+        SpawnRestriction.register(ADEntities.APPLEDOG, SpawnLocationTypes.UNRESTRICTED, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, AppledogEntity::canSpawn);
     }
 }

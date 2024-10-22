@@ -55,7 +55,7 @@ public class AppledogEntity extends AnimalEntity {
     }
 
     public static boolean canSpawn(EntityType<AppledogEntity> appledogEntityEntityType, ServerWorldAccess serverWorldAccess, SpawnReason spawnReason, BlockPos blockPos, Random random) {
-        return blockPos.getX() < -220 && blockPos.getX() > -310 && blockPos.getZ() > 20 && blockPos.getZ() < 100;
+        return blockPos.getX() < -205 && blockPos.getX() > -305 && blockPos.getZ() > 19 && blockPos.getZ() < 119;
     }
 
     protected void initGoals() {

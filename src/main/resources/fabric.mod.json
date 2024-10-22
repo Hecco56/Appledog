@@ -3,15 +3,15 @@
 	"id": "appledog",
 	"version": "${version}",
 	"name": "Appledog",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"description": "Appledog",
 	"authors": [
-		"Me!"
+		"Hecco",
+		"Appledog"
 	],
 	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"sources": "https://github.com/Hecco56/Appledog"
 	},
-	"license": "CC0-1.0",
+	"license": "MIT License",
 	"icon": "assets/appledog/icon.png",
 	"environment": "*",
 	"entrypoints": {
