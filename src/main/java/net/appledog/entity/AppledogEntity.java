@@ -1,13 +1,7 @@
 package net.appledog.entity;
 
-import com.mojang.serialization.Codec;
 import net.appledog.registry.ADEntities;
-import net.appledog.registry.ADItems;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.NbtComponent;
-import net.minecraft.entity.Bucketable;
 import net.minecraft.entity.EntityData;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnReason;
@@ -21,14 +15,11 @@ import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.PassiveEntity;
-import net.minecraft.entity.passive.WolfEntity;
-import net.minecraft.entity.passive.WolfVariant;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.registry.tag.FluidTags;
+import net.minecraft.recipe.Ingredient;
 import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
@@ -41,6 +32,7 @@ import net.minecraft.util.math.random.Random;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
@@ -55,13 +47,13 @@ public class AppledogEntity extends AnimalEntity {
     }
 
     public static boolean canSpawn(EntityType<AppledogEntity> appledogEntityEntityType, ServerWorldAccess serverWorldAccess, SpawnReason spawnReason, BlockPos blockPos, Random random) {
-        return blockPos.getX() < -205 && blockPos.getX() > -305 && blockPos.getZ() > 19 && blockPos.getZ() < 119;
+        return blockPos.getX() < -200 && blockPos.getX() > -300 && blockPos.getZ() > 10 && blockPos.getZ() < 120;
     }
 
     protected void initGoals() {
         this.goalSelector.add(1, new SwimGoal(this));
         this.goalSelector.add(7, new AnimalMateGoal(this, 1.0));
-        this.goalSelector.add(3, new TemptGoal(this, 1.2, (stack) -> stack.isOf(Items.APPLE), false));
+        this.goalSelector.add(3, new TemptGoal(this, 1.2, Ingredient.ofItems(Items.APPLE), false));
         this.goalSelector.add(8, new WanderAroundFarGoal(this, 1.0));
         this.goalSelector.add(10, new LookAtEntityGoal(this, PlayerEntity.class, 8.0F));
         this.goalSelector.add(10, new LookAroundGoal(this));
@@ -105,9 +97,9 @@ public class AppledogEntity extends AnimalEntity {
     }
 
     @Override
-    protected void initDataTracker(DataTracker.Builder builder) {
-        builder.add(VARIANT, 0);
-        super.initDataTracker(builder);
+    protected void initDataTracker() {
+        this.dataTracker.startTracking(VARIANT, 0);
+        super.initDataTracker();
     }
 
     @Override
@@ -129,7 +121,7 @@ public class AppledogEntity extends AnimalEntity {
         return AppledogEntity.Variant.byId(this.dataTracker.get(VARIANT));
     }
 
-    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData) {
+    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound entityNbt) {
         if (spawnReason == SpawnReason.SPAWN_EGG) {
             Random random = world.getRandom();
             if (entityData instanceof AppledogEntity.AppledogData) {
@@ -139,7 +131,7 @@ public class AppledogEntity extends AnimalEntity {
 
             this.setVariant(((AppledogEntity.AppledogData)entityData).getRandomVariant(random));
 
-            return super.initialize(world, difficulty, spawnReason, entityData);
+            return super.initialize(world, difficulty, spawnReason, entityData, entityNbt);
         } else {
             return entityData;
         }

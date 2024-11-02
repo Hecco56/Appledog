@@ -16,6 +16,11 @@ import static net.appledog.Appledog.MOD_ID;
 
 public class ADLangProvider extends FabricLanguageProvider {
     Set<String> usedTranslationKeys = new HashSet<>();
+
+    public ADLangProvider(FabricDataOutput dataOutput) {
+        super(dataOutput, "en_us");
+    }
+
     private void generate(TranslationBuilder translationBuilder, String key, String translation) {
         if(usedTranslationKeys.contains(key)) {
             return;
@@ -24,12 +29,8 @@ public class ADLangProvider extends FabricLanguageProvider {
         usedTranslationKeys.add(key);
     }
 
-    public ADLangProvider(FabricDataOutput dataOutput, CompletableFuture<RegistryWrapper.WrapperLookup> registryLookup) {
-        super(dataOutput, "en_us", registryLookup);
-    }
-
     @Override
-    public void generateTranslations(RegistryWrapper.WrapperLookup registryLookup, TranslationBuilder translationBuilder) {
+    public void generateTranslations(TranslationBuilder translationBuilder) {
         generate(translationBuilder, "itemgroup.appledog", "Appledog Appledog Mod Appledog");
         generate(translationBuilder, "entity.appledog.appledog", "Appledog");
         for (Identifier id : allItemIdsInNamespace(MOD_ID)) {
