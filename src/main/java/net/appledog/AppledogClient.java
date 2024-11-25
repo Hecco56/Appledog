@@ -1,5 +1,7 @@
 package net.appledog;
 
+import net.appledog.entity.ApplepupEntityModel;
+import net.appledog.entity.ApplepupEntityRenderer;
 import net.appledog.registry.ADEntities;
 import net.appledog.registry.ADItems;
 import net.appledog.registry.ADModelLayers;
@@ -20,7 +22,9 @@ public class AppledogClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         EntityModelLayerRegistry.registerModelLayer(ADModelLayers.APPLEDOG, AppledogEntityModel::getTexturedModelData);
+        EntityModelLayerRegistry.registerModelLayer(ADModelLayers.APPLEPUP, ApplepupEntityModel::getTexturedModelData);
         EntityRendererRegistry.register(ADEntities.APPLEDOG, AppledogEntityRenderer::new);
+        EntityRendererRegistry.register(ADEntities.APPLEPUP, ApplepupEntityRenderer::new);
         ModelPredicateProviderRegistry.register(ADItems.DOGAPPLE, Identifier.of("animation"), (itemStack, clientWorld, livingEntity, seed) -> {
             if (itemStack.getComponents().contains(DogappleItem.DOGAPPLE_ANIMATION)) {
                 int animation = itemStack.get(DogappleItem.DOGAPPLE_ANIMATION);

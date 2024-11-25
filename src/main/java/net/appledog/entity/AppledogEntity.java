@@ -1,15 +1,12 @@
 package net.appledog.entity;
 
-import com.mojang.serialization.Codec;
+import net.appledog.Appledog;
 import net.appledog.registry.ADEntities;
-import net.appledog.registry.ADItems;
+import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.NbtComponent;
-import net.minecraft.entity.Bucketable;
 import net.minecraft.entity.EntityData;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.ExperienceOrbEntity;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.ai.pathing.PathNodeType;
@@ -21,29 +18,27 @@ import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.PassiveEntity;
-import net.minecraft.entity.passive.WolfEntity;
-import net.minecraft.entity.passive.WolfVariant;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.registry.tag.FluidTags;
-import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.stat.Stats;
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.Util;
 import net.minecraft.util.function.ValueLists;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
+import net.minecraft.world.GameRules;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.function.IntFunction;
 
 public class AppledogEntity extends AnimalEntity {
@@ -79,10 +74,8 @@ public class AppledogEntity extends AnimalEntity {
         this.playSound(SoundEvents.ENTITY_WOLF_STEP, 0.15F, 1.0F);
     }
 
-    @Nullable
-    @Override
-    public PassiveEntity createChild(ServerWorld world, PassiveEntity entity) {
-        AppledogEntity childEntity = ADEntities.APPLEDOG.create(world);
+    public MobEntity createAppleChild(ServerWorld world, PassiveEntity entity) {
+        ApplepupEntity childEntity = ADEntities.APPLEPUP.create(world);
         if (childEntity != null && entity instanceof AppledogEntity entity2) {
             if (this.random.nextBoolean()) {
                 childEntity.setVariant(this.getVariant());
@@ -98,6 +91,32 @@ public class AppledogEntity extends AnimalEntity {
         }
 
         return childEntity;
+    }
+
+    @Override
+    public void breed(ServerWorld world, AnimalEntity other) {
+        MobEntity entity = this.createAppleChild(world, other);
+        if (entity != null) {
+            entity.refreshPositionAndAngles(this.getX(), this.getY(), this.getZ(), 0.0F, 0.0F);
+            this.appleBreed(world, (AppledogEntity) other, entity);
+            world.spawnEntityAndPassengers(entity);
+        }
+    }
+
+    public void appleBreed(ServerWorld world, AppledogEntity other, @Nullable MobEntity baby) {
+        Optional.ofNullable(this.getLovingPlayer()).or(() -> Optional.ofNullable(other.getLovingPlayer())).ifPresent((player) -> {
+            player.incrementStat(Stats.ANIMALS_BRED);
+            Criteria.BRED_ANIMALS.trigger(player, this, other, (PassiveEntity) baby);
+        });
+        this.setBreedingAge(6000);
+        other.setBreedingAge(6000);
+        this.resetLoveTicks();
+        other.resetLoveTicks();
+        world.sendEntityStatus(this, (byte)18);
+        if (world.getGameRules().getBoolean(GameRules.DO_MOB_LOOT)) {
+            world.spawnEntity(new ExperienceOrbEntity(world, this.getX(), this.getY(), this.getZ(), this.getRandom().nextInt(7) + 1));
+        }
+
     }
 
     protected SoundEvent getDeathSound() {
@@ -145,6 +164,11 @@ public class AppledogEntity extends AnimalEntity {
         }
     }
 
+    @Override
+    public @Nullable PassiveEntity createChild(ServerWorld world, PassiveEntity entity) {
+        return null;
+    }
+
     public static enum Variant implements StringIdentifiable {
         RED_DELICIOUS(0, "red_delicious"),
         GRANNY_SMITH(1, "granny_smith"),
@@ -177,7 +201,7 @@ public class AppledogEntity extends AnimalEntity {
             return BY_ID.apply(id);
         }
 
-        private static AppledogEntity.Variant getRandom(Random random) {
+        static AppledogEntity.Variant getRandom(Random random) {
             AppledogEntity.Variant[] variants = Arrays.stream(values()).toArray(Variant[]::new);
             return Util.getRandom(variants, random);
         }

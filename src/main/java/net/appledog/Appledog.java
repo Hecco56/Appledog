@@ -1,5 +1,6 @@
 package net.appledog;
 
+import net.appledog.entity.ApplepupEntity;
 import net.appledog.registry.ADEntities;
 import net.appledog.entity.AppledogEntity;
 import net.appledog.registry.ADItemGroups;
@@ -27,5 +28,6 @@ public class Appledog implements ModInitializer {
 		ADItemGroups.loadItemGroups();
 		ADMobSpawns.loadSpawns();
 		FabricDefaultAttributeRegistry.register(ADEntities.APPLEDOG, AppledogEntity.createAppledogAttributes());
+		FabricDefaultAttributeRegistry.register(ADEntities.APPLEPUP, ApplepupEntity.createApplepupAttributes());
 	}
 }
