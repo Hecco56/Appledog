@@ -6,10 +6,11 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.model.AnimalModel;
+import net.minecraft.client.render.entity.model.SinglePartEntityModel;
 import net.minecraft.util.math.MathHelper;
 
 @Environment(EnvType.CLIENT)
-public class ApplepupEntityModel<T extends ApplepupEntity> extends AnimalModel<T> {
+public class ApplepupEntityModel<T extends ApplepupEntity> extends SinglePartEntityModel<T> {
 
     private final ModelPart body;
 
@@ -30,18 +31,13 @@ public class ApplepupEntityModel<T extends ApplepupEntity> extends AnimalModel<T
                 .uv(0, 14).cuboid(0.0F, -3.0F, -1.0F, 0.0F, 3.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -6.0F, 0.0F, 0.0F, -0.7854F, 0.0F));
         return TexturedModelData.of(modelData, 32, 32);
     }
-
-    @Override
-    protected Iterable<ModelPart> getHeadParts() {
-        return ImmutableList.of();
-    }
-
-    protected Iterable<ModelPart> getBodyParts() {
-        return ImmutableList.of(this.body);
-    }
-
     @Override
     public void setAngles(T entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {
+        this.updateAnimation(entity.joyAnimationState, ADAnimations.JOY, animationProgress, 1f);
+    }
 
+    @Override
+    public ModelPart getPart() {
+        return body;
     }
 }

@@ -77,15 +77,29 @@ public class AppledogEntity extends AnimalEntity {
     public MobEntity createAppleChild(ServerWorld world, PassiveEntity entity) {
         ApplepupEntity childEntity = ADEntities.APPLEPUP.create(world);
         if (childEntity != null && entity instanceof AppledogEntity entity2) {
-            if (this.random.nextBoolean()) {
-                childEntity.setVariant(this.getVariant());
+            if (random.nextBoolean()) {
+                if (this.random.nextBoolean()) {
+                    childEntity.setVariant(this.getVariant());
+                } else {
+                    switch (this.getVariant()) {
+                        case RED_DELICIOUS -> childEntity.setVariant(random.nextBoolean() ? Variant.MACOUN : Variant.PINK_LADY);
+                        case MACOUN -> childEntity.setVariant(random.nextBoolean() ? Variant.RED_DELICIOUS : Variant.GRANNY_SMITH);
+                        case PINK_LADY -> childEntity.setVariant(random.nextBoolean() ? Variant.RED_DELICIOUS : Variant.GOLDEN_DELICIOUS);
+                        case GRANNY_SMITH -> childEntity.setVariant(random.nextBoolean() ? Variant.MACOUN : Variant.GOLDEN_DELICIOUS);
+                        case GOLDEN_DELICIOUS -> childEntity.setVariant(random.nextBoolean() ? Variant.PINK_LADY : Variant.GRANNY_SMITH);
+                    }
+                }
             } else {
-                switch (entity2.getVariant()) {
-                    case RED_DELICIOUS -> childEntity.setVariant(random.nextBoolean() ? Variant.MACOUN : Variant.PINK_LADY);
-                    case MACOUN -> childEntity.setVariant(random.nextBoolean() ? Variant.RED_DELICIOUS : Variant.GRANNY_SMITH);
-                    case PINK_LADY -> childEntity.setVariant(random.nextBoolean() ? Variant.RED_DELICIOUS : Variant.GOLDEN_DELICIOUS);
-                    case GRANNY_SMITH -> childEntity.setVariant(random.nextBoolean() ? Variant.MACOUN : Variant.GOLDEN_DELICIOUS);
-                    case GOLDEN_DELICIOUS -> childEntity.setVariant(random.nextBoolean() ? Variant.PINK_LADY : Variant.GRANNY_SMITH);
+                if (this.random.nextBoolean()) {
+                    childEntity.setVariant(entity2.getVariant());
+                } else {
+                    switch (entity2.getVariant()) {
+                        case RED_DELICIOUS -> childEntity.setVariant(random.nextBoolean() ? Variant.MACOUN : Variant.PINK_LADY);
+                        case MACOUN -> childEntity.setVariant(random.nextBoolean() ? Variant.RED_DELICIOUS : Variant.GRANNY_SMITH);
+                        case PINK_LADY -> childEntity.setVariant(random.nextBoolean() ? Variant.RED_DELICIOUS : Variant.GOLDEN_DELICIOUS);
+                        case GRANNY_SMITH -> childEntity.setVariant(random.nextBoolean() ? Variant.MACOUN : Variant.GOLDEN_DELICIOUS);
+                        case GOLDEN_DELICIOUS -> childEntity.setVariant(random.nextBoolean() ? Variant.PINK_LADY : Variant.GRANNY_SMITH);
+                    }
                 }
             }
         }

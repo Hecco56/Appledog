@@ -2,10 +2,7 @@ package net.appledog.entity;
 
 import net.appledog.registry.ADEntities;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.EntityData;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.ai.pathing.PathNodeType;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
@@ -40,6 +37,10 @@ import java.util.function.IntFunction;
 public class ApplepupEntity extends PassiveEntity {
     private static final TrackedData<Integer> VARIANT = DataTracker.registerData(ApplepupEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<Integer> AGE = DataTracker.registerData(ApplepupEntity.class, TrackedDataHandlerRegistry.INTEGER);
+
+    public final AnimationState joyAnimationState = new AnimationState();
+    private int joyAnimationTimeout = 0;
+    private int joyCooldown = Random.create().nextBetween(100, 1000);
 
     public ApplepupEntity(EntityType<? extends ApplepupEntity> entityType, World world) {
         super(entityType, world);
@@ -78,8 +79,30 @@ public class ApplepupEntity extends PassiveEntity {
         this.setAge(nbt.getInt("Age"));
     }
 
+
     @Override
     public void tick() {
+//        if (joyCooldown > 0) {
+//            joyCooldown--;
+//        }
+//        if (this.joyAnimationTimeout == 1 && this.joyAnimationState.isRunning()) {
+//            if (random.nextBoolean()) {
+//                this.joyAnimationState.start(dataTracker.get(AGE));
+//                this.joyAnimationTimeout = 10;
+//            } else {
+//                this.joyCooldown = Random.create().nextBetween(60, 1000);
+//                this.joyAnimationTimeout = 0;
+//            }
+//        }
+//        if (this.joyAnimationTimeout > 0) {
+//            this.joyAnimationTimeout--;
+//        } else if (this.joyCooldown <= 0) {
+//            this.joyAnimationState.start(dataTracker.get(AGE));
+//            this.joyAnimationTimeout = 10;
+//        }
+        if (this.getWorld().isClient() && !this.joyAnimationState.isRunning()) {
+            this.joyAnimationState.start(this.age);
+        }
         if (dataTracker.get(AGE) >= 2400) {
             World world = this.getWorld();
             if (world instanceof ServerWorld serverWorld) {
