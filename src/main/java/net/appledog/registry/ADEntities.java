@@ -16,7 +16,7 @@ public class ADEntities {
             .dimensions(0.6F, 0.85F).eyeHeight(0.68F).passengerAttachments(new Vec3d(0.0, 0.81875, -0.0625)).maxTrackingRange(10).build("appledog"));
 
     public static final EntityType<ApplepupEntity> APPLEPUP = register("applepup", EntityType.Builder.create(ApplepupEntity::new, SpawnGroup.CREATURE)
-            .dimensions(0.6F, 0.85F).eyeHeight(0.68F).maxTrackingRange(10).build("applepup"));
+            .dimensions(0.5F, 0.5F).eyeHeight(0.68F).maxTrackingRange(10).build("applepup"));
 
     private static <T extends Entity, E extends EntityType<T>> EntityType<T> register(String id, E entity) {
         return Registry.register(Registries.ENTITY_TYPE, Identifier.of(Appledog.MOD_ID, id), entity);

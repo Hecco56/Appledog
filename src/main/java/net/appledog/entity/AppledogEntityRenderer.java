@@ -18,7 +18,7 @@ public class AppledogEntityRenderer extends MobEntityRenderer<AppledogEntity, Ap
     private static final Identifier MACOUN_TEXTURE = Identifier.of(Appledog.MOD_ID, "textures/entity/appledog/macoun.png");
     private static final Identifier PINK_LADY_TEXTURE = Identifier.of(Appledog.MOD_ID, "textures/entity/appledog/pink_lady.png");
     public AppledogEntityRenderer(EntityRendererFactory.Context context) {
-        super(context, new AppledogEntityModel<>(context.getPart(ADModelLayers.APPLEDOG)), 0.3F);
+        super(context, new AppledogEntityModel<>(context.getPart(ADModelLayers.APPLEDOG)), 0.5F);
     }
     @Override
     public Identifier getTexture(AppledogEntity entity) {

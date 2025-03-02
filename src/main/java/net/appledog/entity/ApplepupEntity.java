@@ -15,16 +15,23 @@ import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.FrogEntity;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.BoneMealItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.particle.ParticleTypes;
+import net.minecraft.particle.ParticleUtil;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.Util;
 import net.minecraft.util.function.ValueLists;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.intprovider.IntProvider;
+import net.minecraft.util.math.intprovider.IntProviderType;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
@@ -44,15 +51,18 @@ public class ApplepupEntity extends PassiveEntity {
 
     public ApplepupEntity(EntityType<? extends ApplepupEntity> entityType, World world) {
         super(entityType, world);
+        this.setPathfindingPenalty(PathNodeType.POWDER_SNOW, -1.0F);
+        this.setPathfindingPenalty(PathNodeType.DANGER_POWDER_SNOW, -1.0F);
     }
 
     protected void initGoals() {
         this.goalSelector.add(1, new LookAroundGoal(this));
         this.goalSelector.add(2, new LookAtEntityGoal(this, PlayerEntity.class, 8.0F));
+//        this.goalSelector.add(3, new WanderAroundFarGoal(this, 1.0));
     }
 
     public static DefaultAttributeContainer.Builder createApplepupAttributes() {
-        return MobEntity.createMobAttributes().add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0f).add(EntityAttributes.GENERIC_MAX_HEALTH, 12.0).add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 256.0);
+        return MobEntity.createMobAttributes().add(EntityAttributes.GENERIC_MAX_HEALTH, 12.0).add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 256.0);
     }
 
     protected SoundEvent getDeathSound() {
@@ -79,6 +89,21 @@ public class ApplepupEntity extends PassiveEntity {
         this.setAge(nbt.getInt("Age"));
     }
 
+    @Override
+    protected ActionResult interactMob(PlayerEntity player, Hand hand) {
+        if (player.getStackInHand(hand).isOf(Items.BONE_MEAL)) {
+            dataTracker.set(AGE, dataTracker.get(AGE) + random.nextBetween(100, 300));
+            for (int i = 0; i < 10; i++) {
+                getWorld().addParticle(ParticleTypes.HAPPY_VILLAGER, getPos().x + (random.nextFloat()-0.5), getPos().y + (random.nextFloat()-0.5), getPos().z + (random.nextFloat()-0.5), 0, 0, 0);
+            }
+            playSound(SoundEvents.ITEM_BONE_MEAL_USE, 1.0f, 1.0f);
+            if (!player.isCreative()) {
+                player.getStackInHand(hand).decrement(1);
+            }
+            return ActionResult.SUCCESS;
+        }
+        return super.interactMob(player, hand);
+    }
 
     @Override
     public void tick() {

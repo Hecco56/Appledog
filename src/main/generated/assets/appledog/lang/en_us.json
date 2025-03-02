@@ -1,6 +1,8 @@
 {
   "entity.appledog.appledog": "Appledog",
+  "entity.appledog.applepup": "Applepup",
   "item.appledog.appledog_spawn_egg": "Appledog Spawn Egg",
+  "item.appledog.applepup_spawn_egg": "Applepup Spawn Egg",
   "item.appledog.dogapple": "Dogapple",
-  "itemgroup.appledog": "Appledog Appledog Mod Appledog"
+  "itemgroup.appledog": "the appledog mod"
 }

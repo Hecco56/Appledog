@@ -30,7 +30,7 @@ public class ADLangProvider extends FabricLanguageProvider {
 
     @Override
     public void generateTranslations(RegistryWrapper.WrapperLookup registryLookup, TranslationBuilder translationBuilder) {
-        generate(translationBuilder, "itemgroup.appledog", "Appledog");
+        generate(translationBuilder, "itemgroup.appledog", "the appledog mod");
         generate(translationBuilder, "entity.appledog.appledog", "Appledog");
         generate(translationBuilder, "entity.appledog.applepup", "Applepup");
         for (Identifier id : allItemIdsInNamespace(MOD_ID)) {

@@ -14,6 +14,7 @@ public class ADItemGroups {
             FabricItemGroup.builder().displayName(Text.translatable("itemgroup.appledog"))
                     .icon(() -> new ItemStack(ADItems.DOGAPPLE)).entries((displayContext, entries) -> {
                         entries.add(ADItems.APPLEDOG_SPAWN_EGG);
+                        entries.add(ADItems.APPLEPUP_SPAWN_EGG);
                         entries.add(ADItems.DOGAPPLE);
                     }).build());
     public static void loadItemGroups() {

@@ -4,6 +4,8 @@ import net.appledog.Appledog;
 import net.appledog.registry.ADEntities;
 import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.ComposterBlock;
 import net.minecraft.entity.EntityData;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ExperienceOrbEntity;
@@ -23,13 +25,16 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.stat.Stats;
+import net.minecraft.state.property.Properties;
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.Util;
 import net.minecraft.util.function.ValueLists;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.LocalDifficulty;
@@ -55,7 +60,7 @@ public class AppledogEntity extends AnimalEntity {
 
     protected void initGoals() {
         this.goalSelector.add(1, new SwimGoal(this));
-        this.goalSelector.add(7, new AnimalMateGoal(this, 1.0));
+        this.goalSelector.add(2, new AnimalMateGoal(this, 1.0));
         this.goalSelector.add(3, new TemptGoal(this, 1.2, (stack) -> stack.isOf(Items.APPLE), false));
         this.goalSelector.add(8, new WanderAroundFarGoal(this, 1.0));
         this.goalSelector.add(10, new LookAtEntityGoal(this, PlayerEntity.class, 8.0F));
@@ -131,6 +136,22 @@ public class AppledogEntity extends AnimalEntity {
             world.spawnEntity(new ExperienceOrbEntity(world, this.getX(), this.getY(), this.getZ(), this.getRandom().nextInt(7) + 1));
         }
 
+    }
+
+    @Override
+    public void tick() {
+        if (random.nextFloat() < 0.05 && isOnGround()) {
+            BlockState state = getWorld().getBlockState(getBlockPos());
+            if (state.isOf(Blocks.COMPOSTER)) {
+                if (state.get(Properties.LEVEL_8) < ComposterBlock.MAX_LEVEL) {
+                    ComposterBlock.playEffects(getWorld(), getBlockPos(), false);
+                    getWorld().playSoundAtBlockCenter(getBlockPos(), SoundEvents.ENTITY_WOLF_WHINE, SoundCategory.BLOCKS, 0.8F, 1.5F, false);
+                    getWorld().setBlockState(getBlockPos(), state.cycle(Properties.LEVEL_8));
+                    remove(RemovalReason.DISCARDED);
+                }
+            }
+        }
+        super.tick();
     }
 
     protected SoundEvent getDeathSound() {
