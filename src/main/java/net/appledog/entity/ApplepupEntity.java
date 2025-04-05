@@ -168,12 +168,12 @@ public class ApplepupEntity extends PassiveEntity {
     public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData) {
         if (spawnReason == SpawnReason.SPAWN_EGG) {
             Random random = world.getRandom();
-            if (entityData instanceof ApplepupEntity.AppledogData) {
+            if (entityData instanceof AppledogEntity.AppledogData) {
             } else {
-                entityData = new ApplepupEntity.AppledogData(AppledogEntity.Variant.getRandom(random), AppledogEntity.Variant.getRandom(random));
+                entityData = new AppledogEntity.AppledogData(AppledogEntity.Variant.getRandom(random), AppledogEntity.Variant.getRandom(random));
             }
 
-            this.setVariant(((ApplepupEntity.AppledogData)entityData).getRandomVariant(random));
+            this.setVariant(((AppledogEntity.AppledogData)entityData).getRandomVariant(random));
 
             return super.initialize(world, difficulty, spawnReason, entityData);
         } else {
@@ -181,21 +181,11 @@ public class ApplepupEntity extends PassiveEntity {
         }
     }
 
+
+
     @Override
     public @Nullable PassiveEntity createChild(ServerWorld world, PassiveEntity entity) {
         return null;
-    }
-
-    public static class AppledogData implements EntityData {
-        public final AppledogEntity.Variant[] variants;
-
-        public AppledogData(AppledogEntity.Variant... variants) {
-            this.variants = variants;
-        }
-
-        public AppledogEntity.Variant getRandomVariant(Random random) {
-            return this.variants[random.nextInt(this.variants.length)];
-        }
     }
 
 }
