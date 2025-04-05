@@ -31,12 +31,3 @@ public class Appledog implements ModInitializer {
 		FabricDefaultAttributeRegistry.register(ADEntities.APPLEPUP, ApplepupEntity.createApplepupAttributes());
 	}
 }
-
-public class GenericBlockRegistry<T extends String> {
-	public final DeferredRegister<Block> BLOCK;
-
-	public GenericBlockRegistry(T namespace) {
-		this.BLOCK = DeferredRegister.create(Registries.BLOCK, namespace);
-	}
-}
-
