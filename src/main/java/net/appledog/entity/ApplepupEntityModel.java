@@ -33,8 +33,6 @@ public class ApplepupEntityModel<T extends ApplepupEntity> extends SinglePartEnt
     }
     @Override
     public void setAngles(T entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {
-        this.animateMovement(ADAnimations.JOY, limbAngle, limbDistance, 1, 1);
-//        this.updateAnimation(entity.joyAnimationState, ADAnimations.JOY, animationProgress, 1f);
     }
 
     @Override

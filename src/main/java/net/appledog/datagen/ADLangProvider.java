@@ -1,21 +1,23 @@
 package net.appledog.datagen;
 
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
-import net.minecraft.item.Item;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
 
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-import java.util.concurrent.CompletableFuture;
 
 import static net.appledog.Appledog.MOD_ID;
 
 public class ADLangProvider extends FabricLanguageProvider {
     Set<String> usedTranslationKeys = new HashSet<>();
+
+    public ADLangProvider(FabricDataGenerator dataGenerator) {
+        super(dataGenerator, "en_us");
+    }
+
     private void generate(TranslationBuilder translationBuilder, String key, String translation) {
         if(usedTranslationKeys.contains(key)) {
             return;
@@ -24,17 +26,13 @@ public class ADLangProvider extends FabricLanguageProvider {
         usedTranslationKeys.add(key);
     }
 
-    public ADLangProvider(FabricDataOutput dataOutput, CompletableFuture<RegistryWrapper.WrapperLookup> registryLookup) {
-        super(dataOutput, "en_us", registryLookup);
-    }
-
     @Override
-    public void generateTranslations(RegistryWrapper.WrapperLookup registryLookup, TranslationBuilder translationBuilder) {
-        generate(translationBuilder, "itemgroup.appledog", "the appledog mod");
+    public void generateTranslations(TranslationBuilder translationBuilder) {
+        generate(translationBuilder, "itemgroup.appledog.appledog", "the appledog mod");
         generate(translationBuilder, "entity.appledog.appledog", "Appledog");
         generate(translationBuilder, "entity.appledog.applepup", "Applepup");
         for (Identifier id : allItemIdsInNamespace(MOD_ID)) {
-            String key = Registries.ITEM.get(id).getTranslationKey();
+            String key = Registry.ITEM.get(id).getTranslationKey();
             if (usedTranslationKeys.contains(key)) {
                 continue;
             }
@@ -45,7 +43,7 @@ public class ADLangProvider extends FabricLanguageProvider {
     }
 
     public static Set<Identifier> allItemIdsInNamespace(String namespace) {
-        Set<Identifier> set = Registries.ITEM.getIds();
+        Set<Identifier> set = Registry.ITEM.getIds();
         Set<Identifier> a = new HashSet<>();
         for (Identifier id : set) {
             if(Objects.equals(id.getNamespace(), namespace)) {

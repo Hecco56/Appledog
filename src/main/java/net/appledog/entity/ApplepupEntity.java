@@ -2,6 +2,8 @@ package net.appledog.entity;
 
 import net.appledog.registry.ADEntities;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.ComposterBlock;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.ai.pathing.PathNodeType;
@@ -11,35 +13,23 @@ import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.entity.passive.AnimalEntity;
-import net.minecraft.entity.passive.FrogEntity;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BoneMealItem;
-import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
-import net.minecraft.particle.ParticleUtil;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
-import net.minecraft.util.StringIdentifiable;
-import net.minecraft.util.Util;
-import net.minecraft.util.function.ValueLists;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.intprovider.IntProvider;
-import net.minecraft.util.math.intprovider.IntProviderType;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Arrays;
-import java.util.function.IntFunction;
 
 public class ApplepupEntity extends PassiveEntity {
     private static final TrackedData<Integer> VARIANT = DataTracker.registerData(ApplepupEntity.class, TrackedDataHandlerRegistry.INTEGER);
@@ -70,10 +60,10 @@ public class ApplepupEntity extends PassiveEntity {
     }
 
     @Override
-    protected void initDataTracker(DataTracker.Builder builder) {
-        builder.add(VARIANT, 0);
-        builder.add(AGE, 0);
-        super.initDataTracker(builder);
+    protected void initDataTracker() {
+        this.dataTracker.startTracking(VARIANT, 0);
+        this.dataTracker.startTracking(AGE, 0);
+        super.initDataTracker();
     }
 
     @Override
@@ -85,7 +75,7 @@ public class ApplepupEntity extends PassiveEntity {
 
     public void readCustomDataFromNbt(NbtCompound nbt) {
         super.readCustomDataFromNbt(nbt);
-        this.setVariant(AppledogEntity.Variant.byId(nbt.getInt("Variant")));
+        this.setVariant(AppledogEntity.Variant.VARIANTS[nbt.getInt("Variant")]);
         this.setAge(nbt.getInt("Age"));
     }
 
@@ -125,6 +115,17 @@ public class ApplepupEntity extends PassiveEntity {
 //            this.joyAnimationState.start(dataTracker.get(AGE));
 //            this.joyAnimationTimeout = 10;
 //        }
+        if (random.nextFloat() < 0.05 && isOnGround()) {
+            BlockState state = getWorld().getBlockState(getBlockPos());
+            if (state.isOf(Blocks.COMPOSTER)) {
+                if (state.get(Properties.LEVEL_8) < ComposterBlock.MAX_LEVEL) {
+                    ComposterBlock.playEffects(getWorld(), getBlockPos(), false);
+                    getWorld().playSoundFromEntity(null, this, SoundEvents.ENTITY_WOLF_WHINE, SoundCategory.BLOCKS, 0.8F, 2F);
+                    getWorld().setBlockState(getBlockPos(), state.cycle(Properties.LEVEL_8));
+                    remove(RemovalReason.DISCARDED);
+                }
+            }
+        }
         if (this.getWorld().isClient() && !this.joyAnimationState.isRunning()) {
             this.joyAnimationState.start(this.age);
         }
@@ -134,16 +135,15 @@ public class ApplepupEntity extends PassiveEntity {
                 AppledogEntity appledogEntity = ADEntities.APPLEDOG.create(this.getWorld());
                 if (appledogEntity != null) {
                     appledogEntity.refreshPositionAndAngles(this.getX(), this.getY(), this.getZ(), this.getYaw(), this.getPitch());
-                    appledogEntity.initialize(serverWorld, this.getWorld().getLocalDifficulty(appledogEntity.getBlockPos()), SpawnReason.CONVERSION, null);
+                    appledogEntity.initialize(serverWorld, this.getWorld().getLocalDifficulty(appledogEntity.getBlockPos()), SpawnReason.CONVERSION, null, null);
                     appledogEntity.setAiDisabled(this.isAiDisabled());
-                    appledogEntity.setVariant(AppledogEntity.Variant.byId(dataTracker.get(VARIANT)));
+                    appledogEntity.setVariant(AppledogEntity.Variant.VARIANTS[dataTracker.get(VARIANT)]);
                     if (this.hasCustomName()) {
                         appledogEntity.setCustomName(this.getCustomName());
                         appledogEntity.setCustomNameVisible(this.isCustomNameVisible());
                     }
 
                     appledogEntity.setPersistent();
-                    appledogEntity.recalculateDimensions(this.getDimensions(this.getPose()));
                     serverWorld.spawnEntityAndPassengers(appledogEntity);
                     this.discard();
                 }
@@ -162,10 +162,11 @@ public class ApplepupEntity extends PassiveEntity {
     }
 
     public AppledogEntity.Variant getVariant() {
-        return AppledogEntity.Variant.byId(this.dataTracker.get(VARIANT));
+        return AppledogEntity.Variant.VARIANTS[this.dataTracker.get(VARIANT)];
     }
 
-    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData) {
+    @Override
+    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound entityNbt) {
         if (spawnReason == SpawnReason.SPAWN_EGG) {
             Random random = world.getRandom();
             if (entityData instanceof AppledogEntity.AppledogData) {
@@ -175,7 +176,7 @@ public class ApplepupEntity extends PassiveEntity {
 
             this.setVariant(((AppledogEntity.AppledogData)entityData).getRandomVariant(random));
 
-            return super.initialize(world, difficulty, spawnReason, entityData);
+            return super.initialize(world, difficulty, spawnReason, entityData, entityNbt);
         } else {
             return entityData;
         }

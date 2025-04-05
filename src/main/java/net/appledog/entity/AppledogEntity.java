@@ -1,7 +1,7 @@
 package net.appledog.entity;
 
-import net.appledog.Appledog;
 import net.appledog.registry.ADEntities;
+import net.appledog.registry.ADItems;
 import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -24,6 +24,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.recipe.Ingredient;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
@@ -32,9 +33,7 @@ import net.minecraft.stat.Stats;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.Util;
-import net.minecraft.util.function.ValueLists;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.LocalDifficulty;
@@ -43,8 +42,8 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Optional;
-import java.util.function.IntFunction;
 
 public class AppledogEntity extends AnimalEntity {
     private static final TrackedData<Integer> VARIANT = DataTracker.registerData(AppledogEntity.class, TrackedDataHandlerRegistry.INTEGER);
@@ -61,7 +60,7 @@ public class AppledogEntity extends AnimalEntity {
     protected void initGoals() {
         this.goalSelector.add(1, new SwimGoal(this));
         this.goalSelector.add(2, new AnimalMateGoal(this, 1.0));
-        this.goalSelector.add(3, new TemptGoal(this, 1.2, (stack) -> stack.isOf(Items.APPLE), false));
+        this.goalSelector.add(3, new TemptGoal(this, 1.2, Ingredient.ofItems(Items.APPLE), false));
         this.goalSelector.add(8, new WanderAroundFarGoal(this, 1.0));
         this.goalSelector.add(10, new LookAtEntityGoal(this, PlayerEntity.class, 8.0F));
         this.goalSelector.add(10, new LookAroundGoal(this));
@@ -145,7 +144,7 @@ public class AppledogEntity extends AnimalEntity {
             if (state.isOf(Blocks.COMPOSTER)) {
                 if (state.get(Properties.LEVEL_8) < ComposterBlock.MAX_LEVEL) {
                     ComposterBlock.playEffects(getWorld(), getBlockPos(), false);
-                    getWorld().playSoundAtBlockCenter(getBlockPos(), SoundEvents.ENTITY_WOLF_WHINE, SoundCategory.BLOCKS, 0.8F, 1.5F, false);
+                    getWorld().playSoundFromEntity(null, this, SoundEvents.ENTITY_WOLF_WHINE, SoundCategory.BLOCKS, 0.8F, 1.5F);
                     getWorld().setBlockState(getBlockPos(), state.cycle(Properties.LEVEL_8));
                     remove(RemovalReason.DISCARDED);
                 }
@@ -159,9 +158,9 @@ public class AppledogEntity extends AnimalEntity {
     }
 
     @Override
-    protected void initDataTracker(DataTracker.Builder builder) {
-        builder.add(VARIANT, 0);
-        super.initDataTracker(builder);
+    protected void initDataTracker() {
+        this.dataTracker.startTracking(VARIANT, 0);
+        super.initDataTracker();
     }
 
     @Override
@@ -172,7 +171,7 @@ public class AppledogEntity extends AnimalEntity {
 
     public void readCustomDataFromNbt(NbtCompound nbt) {
         super.readCustomDataFromNbt(nbt);
-        this.setVariant(AppledogEntity.Variant.byId(nbt.getInt("Variant")));
+        this.setVariant(Variant.VARIANTS[nbt.getInt("Variant")]);
     }
 
     public void setVariant(AppledogEntity.Variant variant) {
@@ -180,10 +179,15 @@ public class AppledogEntity extends AnimalEntity {
     }
 
     public AppledogEntity.Variant getVariant() {
-        return AppledogEntity.Variant.byId(this.dataTracker.get(VARIANT));
+        int index = this.dataTracker.get(VARIANT);
+        if (index < 0 || index >= Variant.VARIANTS.length) {
+            return Variant.RED_DELICIOUS;
+        }
+        return Variant.VARIANTS[index];
     }
 
-    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData) {
+    @Override
+    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound entityNbt) {
         if (spawnReason == SpawnReason.SPAWN_EGG) {
             Random random = world.getRandom();
             if (entityData instanceof AppledogEntity.AppledogData) {
@@ -193,7 +197,7 @@ public class AppledogEntity extends AnimalEntity {
 
             this.setVariant(((AppledogEntity.AppledogData)entityData).getRandomVariant(random));
 
-            return super.initialize(world, difficulty, spawnReason, entityData);
+            return super.initialize(world, difficulty, spawnReason, entityData, entityNbt);
         } else {
             return entityData;
         }
@@ -201,7 +205,7 @@ public class AppledogEntity extends AnimalEntity {
 
     @Override
     public @Nullable PassiveEntity createChild(ServerWorld world, PassiveEntity entity) {
-        return null;
+        return (PassiveEntity) this.createAppleChild(world, entity);
     }
 
     public static enum Variant implements StringIdentifiable {
@@ -211,7 +215,10 @@ public class AppledogEntity extends AnimalEntity {
         MACOUN(3, "macoun"),
         PINK_LADY(4, "pink_lady");
 
-        private static final IntFunction<AppledogEntity.Variant> BY_ID = ValueLists.createIdToValueFunction(AppledogEntity.Variant::getId, values(), ValueLists.OutOfBoundsHandling.ZERO);
+        public static final AppledogEntity.Variant[] VARIANTS =
+                Arrays.stream(values())
+                        .sorted(Comparator.comparingInt(Variant::getId))
+                        .toArray(Variant[]::new);
         private final int id;
         private final String name;
 
@@ -230,10 +237,6 @@ public class AppledogEntity extends AnimalEntity {
 
         public String asString() {
             return this.name;
-        }
-
-        public static AppledogEntity.Variant byId(int id) {
-            return BY_ID.apply(id);
         }
 
         static AppledogEntity.Variant getRandom(Random random) {
