@@ -30,19 +30,17 @@ public class DogappleItem extends Item {
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack itemStack = user.getStackInHand(hand);
-        if (itemStack.getComponents().get(DOGAPPLE_ANIMATION) == 0) {
+        if (itemStack.contains(DOGAPPLE_ANIMATION) && itemStack.getComponents().get(DOGAPPLE_ANIMATION) == 0) {
             itemStack.set(DOGAPPLE_ANIMATION, 15);
-            return TypedActionResult.consume(itemStack);
-        } else {
-            return TypedActionResult.pass(itemStack);
         }
+        return TypedActionResult.pass(itemStack);
     }
 
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
         if (entity instanceof PlayerEntity user) {
             ItemStack itemStack = user.getStackInHand(user.getActiveHand());
-            if (itemStack.getComponents().contains(DOGAPPLE_ANIMATION) && itemStack.getComponents().get(DOGAPPLE_ANIMATION) > 0) {
+            if (selected && itemStack.getComponents().contains(DOGAPPLE_ANIMATION) && itemStack.getComponents().get(DOGAPPLE_ANIMATION) > 0) {
                 itemStack.set(DOGAPPLE_ANIMATION, itemStack.get(DOGAPPLE_ANIMATION) - 1);
                 if (world.isClient() && itemStack.get(DOGAPPLE_ANIMATION) == 12) {
                     world.playSound(user, user.getBlockPos(), SoundEvents.ENTITY_WOLF_AMBIENT, SoundCategory.AMBIENT, 1.0f, 1.0f + world.getRandom().nextFloat()/3);

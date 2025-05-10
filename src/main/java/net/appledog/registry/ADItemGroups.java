@@ -16,6 +16,8 @@ public class ADItemGroups {
                         entries.add(ADItems.APPLEDOG_SPAWN_EGG);
                         entries.add(ADItems.APPLEPUP_SPAWN_EGG);
                         entries.add(ADItems.DOGAPPLE);
+                        entries.add(ADItems.CANDIED_DOGAPPLE);
+                        entries.add(ADItems.APPLESAUCE);
                     }).build());
     public static void loadItemGroups() {
     }

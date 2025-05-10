@@ -2,15 +2,13 @@ package net.appledog;
 
 import net.appledog.entity.ApplepupEntityModel;
 import net.appledog.entity.ApplepupEntityRenderer;
-import net.appledog.registry.ADEntities;
-import net.appledog.registry.ADItems;
-import net.appledog.registry.ADModelLayers;
+import net.appledog.registry.*;
 import net.appledog.entity.AppledogEntityModel;
 import net.appledog.entity.AppledogEntityRenderer;
-import net.appledog.registry.DogappleItem;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
@@ -25,6 +23,7 @@ public class AppledogClient implements ClientModInitializer {
         EntityModelLayerRegistry.registerModelLayer(ADModelLayers.APPLEPUP, ApplepupEntityModel::getTexturedModelData);
         EntityRendererRegistry.register(ADEntities.APPLEDOG, AppledogEntityRenderer::new);
         EntityRendererRegistry.register(ADEntities.APPLEPUP, ApplepupEntityRenderer::new);
+        ParticleFactoryRegistry.getInstance().register(ADEntities.APPLESAUCE, ApplesauceParticle.Factory::new);
         ModelPredicateProviderRegistry.register(ADItems.DOGAPPLE, Identifier.of("animation"), (itemStack, clientWorld, livingEntity, seed) -> {
             if (itemStack.getComponents().contains(DogappleItem.DOGAPPLE_ANIMATION)) {
                 int animation = itemStack.get(DogappleItem.DOGAPPLE_ANIMATION);
@@ -37,6 +36,13 @@ public class AppledogClient implements ClientModInitializer {
                 } else {
                     return 0;
                 }
+            }
+            return 0;
+        });
+        ModelPredicateProviderRegistry.register(ADItems.CANDIED_DOGAPPLE, Identifier.of("animation"), (itemStack, clientWorld, livingEntity, seed) -> {
+            if (itemStack.getComponents().contains(DogappleItem.DOGAPPLE_ANIMATION)) {
+                int animation = itemStack.get(DogappleItem.DOGAPPLE_ANIMATION);
+                return animation == 15 ? 1 : 0;
             }
             return 0;
         });

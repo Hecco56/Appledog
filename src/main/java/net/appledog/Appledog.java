@@ -1,19 +1,11 @@
 package net.appledog;
 
 import net.appledog.entity.ApplepupEntity;
-import net.appledog.registry.ADEntities;
+import net.appledog.registry.*;
 import net.appledog.entity.AppledogEntity;
-import net.appledog.registry.ADItemGroups;
-import net.appledog.registry.ADItems;
-import net.appledog.registry.ADMobSpawns;
 import net.fabricmc.api.ModInitializer;
 
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.ServerWorldAccess;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

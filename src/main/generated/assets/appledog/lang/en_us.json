@@ -3,6 +3,8 @@
   "entity.appledog.applepup": "Applepup",
   "item.appledog.appledog_spawn_egg": "Appledog Spawn Egg",
   "item.appledog.applepup_spawn_egg": "Applepup Spawn Egg",
+  "item.appledog.applesauce": "Applesauce",
+  "item.appledog.candied_dogapple": "Candied Dogapple",
   "item.appledog.dogapple": "Dogapple",
   "itemgroup.appledog": "the appledog mod"
 }
