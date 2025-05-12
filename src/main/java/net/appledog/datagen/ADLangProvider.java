@@ -30,9 +30,12 @@ public class ADLangProvider extends FabricLanguageProvider {
 
     @Override
     public void generateTranslations(RegistryWrapper.WrapperLookup registryLookup, TranslationBuilder translationBuilder) {
-        generate(translationBuilder, "itemgroup.appledog", "the appledog mod");
+        generate(translationBuilder, "itemgroup.appledog", "appledog!");
         generate(translationBuilder, "entity.appledog.appledog", "Appledog");
         generate(translationBuilder, "entity.appledog.applepup", "Applepup");
+        generate(translationBuilder, "entity.appledog.applepup", "Applepup");
+        generate(translationBuilder, "painting.appledog.caninedy.title", "Caninedy");
+        generate(translationBuilder, "painting.appledog.caninedy.author", "§kappledog");
         for (Identifier id : allItemIdsInNamespace(MOD_ID)) {
             String key = Registries.ITEM.get(id).getTranslationKey();
             if (usedTranslationKeys.contains(key)) {

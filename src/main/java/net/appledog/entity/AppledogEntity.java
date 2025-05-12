@@ -238,7 +238,7 @@ public class AppledogEntity extends TameableEntity {
         if (this.getOwnerUuid() == null && source.getAttacker() instanceof PlayerEntity player) {
             if (player.getStackInHand(player.getActiveHand()).isOf(Items.BOWL)) {
                 this.dropStack(new ItemStack(ADItems.APPLESAUCE));
-                player.getStackInHand(player.getActiveHand()).decrement(1);
+                player.getStackInHand(player.getActiveHand()).decrementUnlessCreative(1, player);
                 this.discard();
                 playSound(SoundEvents.ENTITY_WOLF_DEATH);
                 playSound(SoundEvents.ITEM_HONEYCOMB_WAX_ON, 1.5f, 0.8f);
