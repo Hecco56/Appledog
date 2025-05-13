@@ -1,0 +1,12 @@
+{
+  "entity.appledog.appledog": "Собакаблоко",
+  "entity.appledog.applepup": "Яблонок",
+  "item.appledog.appledog_spawn_egg": "Яйцо призыва собакаблока",
+  "item.appledog.applepup_spawn_egg": "Яйцо призыва яблонока",
+  "item.appledog.applesauce": "Яблочное пюре",
+  "item.appledog.candied_dogapple": "Гавлоко в карамели",
+  "item.appledog.dogapple": "Гавлоко",
+  "itemgroup.appledog": "appledog!",
+  "painting.appledog.caninedy.author": "§kappledog",
+  "painting.appledog.caninedy.title": "Собасти"
+}
