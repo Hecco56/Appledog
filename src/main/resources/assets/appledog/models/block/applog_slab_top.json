@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab_top",
+  "textures": {
+    "bottom": "appledog:block/applog_top",
+    "side": "appledog:block/applog",
+    "top": "appledog:block/applog_top"
+  }
+}

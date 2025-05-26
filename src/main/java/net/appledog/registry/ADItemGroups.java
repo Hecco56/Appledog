@@ -31,6 +31,11 @@ public class ADItemGroups {
                         entries.add(ADItems.DOGAPPLE);
                         entries.add(ADItems.CANDIED_DOGAPPLE);
                         entries.add(ADItems.APPLESAUCE);
+                        entries.add(ADBlocks.APPLOG);
+                        entries.add(ADBlocks.APPLOG_SLAB);
+                        entries.add(ADBlocks.APPLOOD);
+                        entries.add(ADBlocks.APPLEAVES);
+                        entries.add(ADBlocks.APPLECOG);
                         displayContext.lookup().getOptionalWrapper(RegistryKeys.PAINTING_VARIANT).ifPresent((registryWrapper) -> {
                             addPaintings(entries, displayContext.lookup(), registryWrapper, (registryEntry) -> registryEntry.isIn(TagKey.of(RegistryKeys.PAINTING_VARIANT, Identifier.of(Appledog.MOD_ID, "ad_paintings"))), ItemGroup.StackVisibility.PARENT_AND_SEARCH_TABS);
                         });

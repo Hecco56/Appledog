@@ -1,0 +1,17 @@
+{
+  "appledog_hurt": {
+    "subtitle": "subtitles.appledog.appledog.hurt",
+    "sounds": [
+      "appledog:appledog/hurt1",
+      "appledog:appledog/hurt2",
+      "appledog:appledog/hurt3"
+    ]
+  },
+  "appledog_saucify": {
+    "subtitle": "subtitles.appledog.appledog.saucify",
+    "sounds": [
+      "appledog:appledog/saucify1",
+      "appledog:appledog/saucify2"
+    ]
+  }
+}

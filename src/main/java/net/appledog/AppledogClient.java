@@ -8,12 +8,18 @@ import net.appledog.entity.AppledogEntityRenderer;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
+import net.minecraft.client.color.world.BiomeColors;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.ColorHelper;
+import net.minecraft.world.biome.FoliageColors;
 
 @Environment(EnvType.CLIENT)
 public class AppledogClient implements ClientModInitializer {
@@ -46,5 +52,11 @@ public class AppledogClient implements ClientModInitializer {
             }
             return 0;
         });
+
+        ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) -> world != null && pos != null ? BiomeColors.getFoliageColor(world, pos)
+                        : FoliageColors.getDefaultColor(),
+                ADBlocks.APPLEAVES);
+        ColorProviderRegistry.ITEM.register((stack, tintIndex) -> ColorHelper.Argb.fullAlpha(FoliageColors.getDefaultColor()), ADBlocks.APPLEAVES);
+        BlockRenderLayerMap.INSTANCE.putBlock(ADBlocks.APPLECOG, RenderLayer.getCutout());
     }
 }

@@ -1,12 +1,10 @@
 package net.appledog.datagen;
 
+import net.appledog.registry.ADBlocks;
 import net.appledog.registry.ADItems;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
-import net.minecraft.data.client.BlockStateModelGenerator;
-import net.minecraft.data.client.ItemModelGenerator;
-import net.minecraft.data.client.Model;
-import net.minecraft.data.client.Models;
+import net.minecraft.data.client.*;
 import net.minecraft.util.Identifier;
 
 import java.util.Optional;
@@ -18,7 +16,8 @@ public class ADModelProvider extends FabricModelProvider {
 
     @Override
     public void generateBlockStateModels(BlockStateModelGenerator blockStateModelGenerator) {
-
+        blockStateModelGenerator.registerLog(ADBlocks.APPLOG).log(ADBlocks.APPLOG).wood(ADBlocks.APPLOOD);
+        blockStateModelGenerator.registerSingleton(ADBlocks.APPLEAVES, TexturedModel.LEAVES);
     }
 
     @Override

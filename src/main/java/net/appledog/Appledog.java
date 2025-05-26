@@ -17,8 +17,11 @@ public class Appledog implements ModInitializer {
 	public void onInitialize() {
 		ADEntities.loadEntities();
 		ADItems.loadItems();
+		ADBlocks.loadBlocks();
 		ADItemGroups.loadItemGroups();
 		ADMobSpawns.loadSpawns();
+		ADSounds.loadSounds();
+		ADRegistries.loadRegistries();
 		FabricDefaultAttributeRegistry.register(ADEntities.APPLEDOG, AppledogEntity.createAppledogAttributes());
 		FabricDefaultAttributeRegistry.register(ADEntities.APPLEPUP, ApplepupEntity.createApplepupAttributes());
 	}

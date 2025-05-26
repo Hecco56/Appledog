@@ -1,0 +1,19 @@
+{
+	"credit": "Made with Blockbench by Hecco",
+	"ambientocclusion": false,
+	"texture_size": [32, 32],
+	"textures": {
+		"particle": "appledog:block/applecog",
+		"texture": "appledog:block/applecog"
+	},
+	"elements": [
+		{
+			"from": [-2, -2, 0.1],
+			"to": [18, 18, 0.1],
+			"faces": {
+				"north": {"uv": [13, 3, 3, 13], "texture": "#texture"},
+				"south": {"uv": [3, 3, 13, 13], "texture": "#texture"}
+			}
+		}
+	]
+}

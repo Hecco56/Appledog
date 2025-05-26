@@ -1,8 +1,7 @@
 package net.appledog.entity;
 
 import net.appledog.Appledog;
-import net.appledog.registry.ADEntities;
-import net.appledog.registry.ADItems;
+import net.appledog.registry.*;
 import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -87,6 +86,11 @@ public class AppledogEntity extends TameableEntity {
 
     protected void playStepSound(BlockPos pos, BlockState state) {
         this.playSound(SoundEvents.ENTITY_WOLF_STEP, 0.15F, 1.0F);
+    }
+
+    @Override
+    protected @Nullable SoundEvent getHurtSound(DamageSource source) {
+        return ADSounds.APPLEDOG_HURT;
     }
 
     public MobEntity createAppleChild(ServerWorld world, PassiveEntity entity) {
@@ -240,15 +244,21 @@ public class AppledogEntity extends TameableEntity {
                 this.dropStack(new ItemStack(ADItems.APPLESAUCE));
                 player.getStackInHand(player.getActiveHand()).decrementUnlessCreative(1, player);
                 this.discard();
-                playSound(SoundEvents.ENTITY_WOLF_DEATH);
-                playSound(SoundEvents.ITEM_HONEYCOMB_WAX_ON, 1.5f, 0.8f);
-                for (int i = 0; i < 25; i++) {
+                playSound(ADSounds.APPLEDOG_SAUCIFY);
+                for (int i = 0; i < 100; i++) {
                     double x = this.getX() + (random.nextFloat()-0.5);
                     double y = this.getY() + 0.5 + (random.nextFloat()-0.5);
                     double z = this.getZ() + (random.nextFloat()-0.5);
-                    this.getWorld().addParticle(ADEntities.APPLESAUCE, x, y, z,  -(this.getX()-x)/1.7, -(this.getY()-y)/2, -(this.getZ()-z)/1.7);
+                    this.getWorld().addParticle(ADEntities.APPLESAUCE, x, y, z,  -(this.getX()-x)/1.2, -(this.getY()-y)/2, -(this.getZ()-z)/1.2);
                 }
-                for (int i = 0; i < 200; i++) {
+                for (int i = 0; i < 300; i++) {
+                    double x = this.getX() + (random.nextFloat()-0.5);
+                    double y = this.getY() + 0.5 + (random.nextFloat()-0.5);
+                    double z = this.getZ() + (random.nextFloat()-0.5);
+                    this.getWorld().addParticle(ADEntities.APPLESAUCE, x, y, z,  -(this.getX()-x)/6, -(this.getY()-y)/6, -(this.getZ()-z)/6);
+                }
+            } else {
+                for (int i = 0; i < 4; i++) {
                     double x = this.getX() + (random.nextFloat()-0.5);
                     double y = this.getY() + 0.5 + (random.nextFloat()-0.5);
                     double z = this.getZ() + (random.nextFloat()-0.5);
@@ -267,7 +277,7 @@ public class AppledogEntity extends TameableEntity {
     }
 
     protected SoundEvent getDeathSound() {
-        return SoundEvents.ENTITY_WOLF_DEATH;
+        return ADSounds.APPLEDOG_HURT;
     }
 
     @Override

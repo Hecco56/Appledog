@@ -1,5 +1,6 @@
 package net.appledog;
 
+import net.appledog.datagen.ADBlockLootTableProvider;
 import net.appledog.datagen.ADEntityLootTableProvider;
 import net.appledog.datagen.ADLangProvider;
 import net.appledog.datagen.ADModelProvider;
@@ -13,5 +14,6 @@ public class AppledogDataGenerator implements DataGeneratorEntrypoint {
 		pack.addProvider(ADLangProvider::new);
 		pack.addProvider(ADModelProvider::new);
 		pack.addProvider(ADEntityLootTableProvider::new);
+		pack.addProvider(ADBlockLootTableProvider::new);
 	}
 }

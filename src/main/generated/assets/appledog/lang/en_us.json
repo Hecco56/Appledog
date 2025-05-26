@@ -1,4 +1,9 @@
 {
+  "block.appledog.appleaves": "Appleaves",
+  "block.appledog.applecog": "Applecog",
+  "block.appledog.applog": "Applog",
+  "block.appledog.applog_slab": "Applog Slab",
+  "block.appledog.applood": "Applood",
   "entity.appledog.appledog": "Appledog",
   "entity.appledog.applepup": "Applepup",
   "item.appledog.appledog_spawn_egg": "Appledog Spawn Egg",

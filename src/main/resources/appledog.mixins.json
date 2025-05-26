@@ -3,6 +3,8 @@
   "package": "net.appledog.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "LivingEntityMixin",
+    "WanderAroundGoalMixin"
   ],
   "injectors": {
     "defaultRequire": 1
