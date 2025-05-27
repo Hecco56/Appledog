@@ -4,9 +4,13 @@
   "compatibilityLevel": "JAVA_21",
   "mixins": [
     "LivingEntityMixin",
-    "WanderAroundGoalMixin"
+    "WanderAroundGoalMixin",
+    "ZombieEntityMixin"
   ],
   "injectors": {
     "defaultRequire": 1
-	}
+  },
+  "client": [
+    "PlayerEntityRendererMixin"
+  ]
 }

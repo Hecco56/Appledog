@@ -30,6 +30,7 @@ public class ADItemGroups {
                         entries.add(ADItems.APPLEPUP_SPAWN_EGG);
                         entries.add(ADItems.DOGAPPLE);
                         entries.add(ADItems.CANDIED_DOGAPPLE);
+                        entries.add(ADItems.SALTED_DOGAPPLE);
                         entries.add(ADItems.APPLESAUCE);
                         entries.add(ADBlocks.APPLOG);
                         entries.add(ADBlocks.APPLOG_SLAB);

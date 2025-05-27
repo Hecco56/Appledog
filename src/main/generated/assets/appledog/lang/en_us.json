@@ -4,6 +4,7 @@
   "block.appledog.applog": "Applog",
   "block.appledog.applog_slab": "Applog Slab",
   "block.appledog.applood": "Applood",
+  "death.attack.salted_dogapple_bite": "%1$s's hand was bit off by Salted Dogapple",
   "entity.appledog.appledog": "Appledog",
   "entity.appledog.applepup": "Applepup",
   "item.appledog.appledog_spawn_egg": "Appledog Spawn Egg",
@@ -11,6 +12,7 @@
   "item.appledog.applesauce": "Applesauce",
   "item.appledog.candied_dogapple": "Candied Dogapple",
   "item.appledog.dogapple": "Dogapple",
+  "item.appledog.salted_dogapple": "Salted Dogapple",
   "itemgroup.appledog": "appledog!",
   "painting.appledog.caninedy.author": "§kappledog",
   "painting.appledog.caninedy.title": "Caninedy"

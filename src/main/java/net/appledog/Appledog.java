@@ -22,6 +22,7 @@ public class Appledog implements ModInitializer {
 		ADMobSpawns.loadSpawns();
 		ADSounds.loadSounds();
 		ADRegistries.loadRegistries();
+		ADFoliageGeneration.loadGeneration();
 		FabricDefaultAttributeRegistry.register(ADEntities.APPLEDOG, AppledogEntity.createAppledogAttributes());
 		FabricDefaultAttributeRegistry.register(ADEntities.APPLEPUP, ApplepupEntity.createApplepupAttributes());
 	}

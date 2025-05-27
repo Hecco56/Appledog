@@ -7,6 +7,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.MobEntityRenderer;
+import net.minecraft.entity.passive.ParrotEntity;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
@@ -20,9 +21,13 @@ public class ApplepupEntityRenderer extends MobEntityRenderer<ApplepupEntity, Ap
     }
     @Override
     public Identifier getTexture(ApplepupEntity entity) {
+        return getTexture(entity.getVariant());
+    }
+
+    public static Identifier getTexture(AppledogEntity.Variant entity) {
         AppledogEntity.Variant[] variants = AppledogEntity.Variant.values();
         for (AppledogEntity.Variant variant : variants) {
-            if (variant == entity.getVariant()) {
+            if (variant == entity) {
                 return Identifier.of(Appledog.MOD_ID, "textures/entity/applepup/" + variant.getName() + ".png");
             }
         }

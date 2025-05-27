@@ -1,4 +1,4 @@
-package net.appledog.registry;
+package net.appledog.custom;
 
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -10,7 +10,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 
-import static net.appledog.registry.DogappleItem.DOGAPPLE_ANIMATION;
+import static net.appledog.custom.DogappleItem.DOGAPPLE_ANIMATION;
 
 public class CandiedDogappleItem extends Item {
     public CandiedDogappleItem(Settings settings) {

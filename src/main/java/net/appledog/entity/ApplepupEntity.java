@@ -41,7 +41,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
 import java.util.function.IntFunction;
 
-public class ApplepupEntity extends PassiveEntity {
+public class ApplepupEntity extends ShoulderEntity {
     private static final TrackedData<Integer> VARIANT = DataTracker.registerData(ApplepupEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<Integer> AGE = DataTracker.registerData(ApplepupEntity.class, TrackedDataHandlerRegistry.INTEGER);
 
@@ -51,14 +51,12 @@ public class ApplepupEntity extends PassiveEntity {
 
     public ApplepupEntity(EntityType<? extends ApplepupEntity> entityType, World world) {
         super(entityType, world);
-        this.setPathfindingPenalty(PathNodeType.POWDER_SNOW, -1.0F);
-        this.setPathfindingPenalty(PathNodeType.DANGER_POWDER_SNOW, -1.0F);
     }
 
     protected void initGoals() {
         this.goalSelector.add(1, new LookAroundGoal(this));
         this.goalSelector.add(2, new LookAtEntityGoal(this, PlayerEntity.class, 8.0F));
-//        this.goalSelector.add(3, new WanderAroundFarGoal(this, 1.0));
+        this.goalSelector.add(3, new SitOnPlayerShoulderGoal(this));
     }
 
     public static DefaultAttributeContainer.Builder createApplepupAttributes() {

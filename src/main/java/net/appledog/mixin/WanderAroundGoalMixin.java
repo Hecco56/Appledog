@@ -1,7 +1,7 @@
 package net.appledog.mixin;
 
 import net.appledog.registry.ADBlocks;
-import net.appledog.registry.ApplecogBlock;
+import net.appledog.custom.ApplecogBlock;
 import net.minecraft.entity.ai.goal.WanderAroundGoal;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.util.math.Direction;

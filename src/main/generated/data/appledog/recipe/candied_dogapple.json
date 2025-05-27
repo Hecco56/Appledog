@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "#": {
+      "item": "appledog:dogapple"
+    },
+    "/": {
+      "item": "minecraft:sugar"
+    }
+  },
+  "pattern": [
+    " / ",
+    "/#/",
+    " / "
+  ],
+  "result": {
+    "count": 1,
+    "id": "appledog:candied_dogapple"
+  }
+}

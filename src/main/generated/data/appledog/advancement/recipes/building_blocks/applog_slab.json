@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_applog": {
+      "conditions": {
+        "items": [
+          {
+            "items": "appledog:applog"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "appledog:applog_slab"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_applog"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "appledog:applog_slab"
+    ]
+  }
+}

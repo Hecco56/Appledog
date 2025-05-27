@@ -1,5 +1,8 @@
 package net.appledog;
 
+import net.appledog.custom.ApplesauceParticle;
+import net.appledog.custom.DogappleItem;
+import net.appledog.custom.SaltedDogappleItem;
 import net.appledog.entity.ApplepupEntityModel;
 import net.appledog.entity.ApplepupEntityRenderer;
 import net.appledog.registry.*;
@@ -16,7 +19,6 @@ import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.client.color.world.BiomeColors;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.client.render.RenderLayer;
-import net.minecraft.component.DataComponentTypes;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.ColorHelper;
 import net.minecraft.world.biome.FoliageColors;
@@ -49,6 +51,14 @@ public class AppledogClient implements ClientModInitializer {
             if (itemStack.getComponents().contains(DogappleItem.DOGAPPLE_ANIMATION)) {
                 int animation = itemStack.get(DogappleItem.DOGAPPLE_ANIMATION);
                 return animation == 15 ? 1 : 0;
+            }
+            return 0;
+        });
+
+        ModelPredicateProviderRegistry.register(ADItems.SALTED_DOGAPPLE, Identifier.of("animation"), (itemStack, clientWorld, livingEntity, seed) -> {
+            if (itemStack.getComponents().contains(DogappleItem.DOGAPPLE_ANIMATION)) {
+                int animation = itemStack.get(DogappleItem.DOGAPPLE_ANIMATION);
+                return animation <= 1 ? 0 : 1;
             }
             return 0;
         });

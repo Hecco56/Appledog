@@ -1,24 +1,20 @@
-package net.appledog.registry;
+package net.appledog.custom;
 
 import com.mojang.serialization.MapCodec;
+import net.appledog.registry.ADBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.LichenGrower;
 import net.minecraft.block.MultifaceGrowthBlock;
 import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.item.Items;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Arrays;
-import java.util.Objects;
 
 public class ApplecogBlock extends MultifaceGrowthBlock {
     public static final BooleanProperty POWERED = Properties.POWERED;
@@ -44,7 +40,7 @@ public class ApplecogBlock extends MultifaceGrowthBlock {
         }
         if (ctx.getWorld().getBlockState(pos.offset(ctx.getSide().getOpposite())).isSideSolidFullSquare(ctx.getWorld(), pos.offset(ctx.getSide().getOpposite()), ctx.getSide())) {
             return state.with(getProperty(ctx.getSide().getOpposite()), true)
-                    .with(REVERSED, (pos.getX() + pos.getY() + pos.getZ()) % 2 == 1);
+                    .with(REVERSED, Math.abs(pos.getX() + pos.getY() + pos.getZ()) % 2 == 1);
         } else {
             return null;
         }
@@ -53,7 +49,7 @@ public class ApplecogBlock extends MultifaceGrowthBlock {
     @Override
     protected BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
         if (state.isOf(this)) {
-            return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos).with(REVERSED, (pos.getX() + pos.getY() + pos.getZ()) % 2 == 1);
+            return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos).with(REVERSED, Math.abs(pos.getX() + pos.getY() + pos.getZ()) % 2 == 1);
         } else {
             return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
         }

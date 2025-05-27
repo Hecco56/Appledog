@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "#": {
+      "item": "appledog:dogapple"
+    },
+    "/": {
+      "item": "appledog:salted_dogapple"
+    }
+  },
+  "pattern": [
+    "#",
+    "/"
+  ],
+  "result": {
+    "count": 1,
+    "id": "appledog:salted_dogapple"
+  }
+}
