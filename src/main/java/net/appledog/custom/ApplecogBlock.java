@@ -48,7 +48,7 @@ public class ApplecogBlock extends MultifaceGrowthBlock {
 
     @Override
     protected BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        if (state.isOf(this)) {
+        if (state.isOf(this) && super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos).contains(REVERSED)) {
             return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos).with(REVERSED, Math.abs(pos.getX() + pos.getY() + pos.getZ()) % 2 == 1);
         } else {
             return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);

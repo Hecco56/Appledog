@@ -1,4 +1,5 @@
-// 1.21.1	2025-05-27T12:01:58.4067963	Appledog/Block Loot Tables
+// 1.21.1	2025-06-14T00:18:59.3137135	Appledog/Block Loot Tables
 12564cec1c0f003260669f56372e56b8c73f302d data\appledog\loot_table\blocks\applog_slab.json
+9faed952ea53877ffb44f9c00dd802d31bda0b92 data\appledog\loot_table\blocks\applecog.json
 d37d20136118b0e6dbe380b9298e110039f2f619 data\appledog\loot_table\blocks\applood.json
 b61e0bf4caaf24f22f9388a2e3ad06445913c4f5 data\appledog\loot_table\blocks\applog.json

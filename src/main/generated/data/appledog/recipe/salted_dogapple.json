@@ -6,7 +6,7 @@
       "item": "appledog:dogapple"
     },
     "/": {
-      "item": "appledog:salted_dogapple"
+      "item": "minecraft:water_bucket"
     }
   },
   "pattern": [

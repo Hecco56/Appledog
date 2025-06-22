@@ -51,7 +51,6 @@ public class SaltedDogappleItem extends Item {
                 int i = itemStack.get(DOGAPPLE_ANIMATION);
                 itemStack.set(DOGAPPLE_ANIMATION, i - 1);
                 if (i < 2) {
-                    user.dropStack(ADItems.SALTED_DOGAPPLE.getDefaultStack());
                     world.playSound(user, user.getBlockPos(), SoundEvents.ENTITY_FOX_BITE, SoundCategory.AMBIENT, 1.0f, 1.0f + world.getRandom().nextFloat()/3);
                     DamageSource damageSource = new DamageSource(
                             world.getRegistryManager()
@@ -60,6 +59,8 @@ public class SaltedDogappleItem extends Item {
                     user.damage(damageSource, 6);
                     if (user.isInCreativeMode()) {
                         user.kill();
+                    } else {
+                        user.dropStack(ADItems.SALTED_DOGAPPLE.getDefaultStack());
                     }
                     user.getInventory().setStack(slot, ItemStack.EMPTY);
                 }

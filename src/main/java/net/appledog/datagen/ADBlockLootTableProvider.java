@@ -27,6 +27,7 @@ public class ADBlockLootTableProvider extends FabricBlockLootTableProvider {
         addDrop(ADBlocks.APPLOG);
         addDrop(ADBlocks.APPLOOD);
         addDrop(ADBlocks.APPLOG_SLAB, slabDrops(ADBlocks.APPLOG_SLAB));
+        addDrop(ADBlocks.APPLECOG);
         mangroveLeavesDrops(ADBlocks.APPLEAVES);
         RegistryWrapper.Impl<Enchantment> impl = this.registryLookup.getWrapperOrThrow(RegistryKeys.ENCHANTMENT);
         this.dropsWithSilkTouchOrShears(ADBlocks.APPLEAVES, ((LeafEntry.Builder<?>)this.applyExplosionDecay(ADBlocks.APPLEAVES, ItemEntry.builder(Items.STICK).apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(1.0F, 2.0F))))).conditionally(TableBonusLootCondition.builder(impl.getOrThrow(Enchantments.FORTUNE), 0.02F, 0.022222223F, 0.025F, 0.033333335F, 0.1F)));

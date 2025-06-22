@@ -37,7 +37,7 @@ public class ADRecipeProvider extends FabricRecipeProvider {
                 .pattern("#")
                 .pattern("/")
                 .input('#', ADItems.DOGAPPLE)
-                .input('/', ADItems.SALTED_DOGAPPLE)
+                .input('/', Items.WATER_BUCKET)
                 .criterion(hasItem(ADItems.DOGAPPLE), conditionsFromItem(ADItems.DOGAPPLE))
                 .offerTo(recipeExporter);
 

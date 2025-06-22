@@ -1,12 +1,12 @@
-// 1.21.1	2025-05-27T12:01:58.4057962	Appledog/Model Definitions
+// 1.21.1	2025-06-14T00:18:59.3127138	Appledog/Model Definitions
 ea0378e5ba7b38e720f4b96b1f1cdae03f1994ac assets\appledog\models\item\applesauce.json
 e64def26b5202b9e128773ade39e4ff4a29ec644 assets\appledog\models\block\applog.json
 35fa37efc971428f1e538bbab0e4961e04727177 assets\appledog\blockstates\applood.json
 760fcd8da98938b4aa16b44724c26425e64c5e35 assets\appledog\models\item\applood.json
 63ec6c618a3a23eab4cab9c52d7d3250de9b516e assets\appledog\models\item\appledog_spawn_egg.json
 6f581e70b96685883988d54a950983dde4ee696a assets\appledog\blockstates\appleaves.json
-e330fa7d1dfee2e5f3014c8d68e43a1b93982105 assets\appledog\models\item\appleaves.json
 63ec6c618a3a23eab4cab9c52d7d3250de9b516e assets\appledog\models\item\applepup_spawn_egg.json
+e330fa7d1dfee2e5f3014c8d68e43a1b93982105 assets\appledog\models\item\appleaves.json
 d6a9e2f0700ea75dfacfbe718ae9accfb4d04667 assets\appledog\models\block\appleaves.json
 b2a65ac99f60e5faaba1744b9f2c0c9193235f89 assets\appledog\blockstates\applog.json
 1441fc68c404aabb849aec5e744fc70eb20d4d55 assets\appledog\models\item\applog.json
