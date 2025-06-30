@@ -4,8 +4,7 @@ import net.appledog.Appledog;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
+import net.minecraft.registry.*;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
@@ -14,8 +13,18 @@ public class ADItemGroups {
             FabricItemGroup.builder().displayName(Text.translatable("itemgroup.appledog"))
                     .icon(() -> new ItemStack(ADItems.DOGAPPLE)).entries((displayContext, entries) -> {
                         entries.add(ADItems.APPLEDOG_SPAWN_EGG);
+                        entries.add(ADItems.APPLEPUP_SPAWN_EGG);
                         entries.add(ADItems.DOGAPPLE);
+                        entries.add(ADItems.CANDIED_DOGAPPLE);
+                        entries.add(ADItems.SALTED_DOGAPPLE);
+                        entries.add(ADItems.APPLESAUCE);
+                        entries.add(ADBlocks.APPLOG);
+                        entries.add(ADBlocks.APPLOG_SLAB);
+                        entries.add(ADBlocks.APPLOOD);
+                        entries.add(ADBlocks.APPLEAVES);
+                        entries.add(ADBlocks.APPLECOG);
                     }).build());
+
     public static void loadItemGroups() {
     }
 }

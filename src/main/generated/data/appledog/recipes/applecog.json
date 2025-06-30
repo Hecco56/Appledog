@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "#": {
+      "item": "minecraft:iron_ingot"
+    },
+    "A": {
+      "item": "appledog:dogapple"
+    }
+  },
+  "pattern": [
+    " # ",
+    "#A#",
+    " # "
+  ],
+  "result": {
+    "count": 4,
+    "item": "appledog:applecog"
+  },
+  "show_notification": true
+}

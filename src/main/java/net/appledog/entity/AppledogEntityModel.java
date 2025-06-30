@@ -4,7 +4,9 @@ import com.google.common.collect.ImmutableList;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.model.*;
+import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.model.AnimalModel;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.MathHelper;
 
 @Environment(EnvType.CLIENT)
@@ -49,7 +51,7 @@ public class AppledogEntityModel<T extends AppledogEntity> extends AnimalModel<T
         modelPartData.addChild("left_hind_leg", modelPartBuilder, ModelTransform.pivot(0.5F, 16.0F, 7.0F));
         modelPartData.addChild("right_front_leg", modelPartBuilder, ModelTransform.pivot(-2.5F, 16.0F, -4.0F));
         modelPartData.addChild("left_front_leg", modelPartBuilder1, ModelTransform.pivot(0.5F, 16.0F, -4.0F));
-        ModelPartData modelPartData3 = modelPartData.addChild("tail", ModelPartBuilder.create(), ModelTransform.of(-1.0F, 12.0F, 8.0F, 0.62831855F, 0.0F, 0.0F));
+        ModelPartData modelPartData3 = modelPartData.addChild("tail", ModelPartBuilder.create(), ModelTransform.of(-1.0F, 12.0F, 8.0F, 0, 0.0F, 0.0F));
         modelPartData3.addChild("real_tail", ModelPartBuilder.create().uv(9, 18).cuboid(0.0F, 0.0F, -1.0F, 2.0F, 8.0F, 2.0F,  new Dilation(0.0F)), ModelTransform.NONE);
         return TexturedModelData.of(modelData, 64, 32);
     }
@@ -61,19 +63,38 @@ public class AppledogEntityModel<T extends AppledogEntity> extends AnimalModel<T
     public void animateModel(T wolfEntity, float f, float g, float h) {
         this.tail.yaw = MathHelper.cos(f * 0.6662F) * 1.4F * g;
 
-        this.torso.setPivot(0.0F, 14.0F, 2.0F);
-        this.torso.pitch = 1.5707964F;
-        this.neck.setPivot(-1.0F, 14.0F, -3.0F);
-        this.neck.pitch = this.torso.pitch;
-        this.tail.setPivot(-1.0F, 12.0F, 8.0F);
-        this.rightHindLeg.setPivot(-2.5F, 16.0F, 7.0F);
-        this.leftHindLeg.setPivot(0.5F, 16.0F, 7.0F);
-        this.rightFrontLeg.setPivot(-2.5F, 16.0F, -4.0F);
-        this.leftFrontLeg.setPivot(0.5F, 16.0F, -4.0F);
-        this.rightHindLeg.pitch = MathHelper.cos(f * 0.6662F) * 1.4F * g;
-        this.leftHindLeg.pitch = MathHelper.cos(f * 0.6662F + 3.1415927F) * 1.4F * g;
-        this.rightFrontLeg.pitch = MathHelper.cos(f * 0.6662F + 3.1415927F) * 1.4F * g;
-        this.leftFrontLeg.pitch = MathHelper.cos(f * 0.6662F) * 1.4F * g;
+        if (wolfEntity.isInSittingPose()) {
+            this.neck.setPivot(-1.0F, 16.0F, -3.0F);
+            this.neck.pitch = 1.2566371F;
+            this.neck.yaw = 0.0F;
+            this.torso.setPivot(0.0F, 18.0F, 0.0F);
+            this.torso.pitch = ((float)Math.PI / 4F);
+            this.tail.setPivot(-1.0F, 21.0F, 6.0F);
+            this.rightHindLeg.setPivot(-2.5F, 22.7F, 2.0F);
+            this.rightHindLeg.pitch = ((float)Math.PI * 1.5F);
+            this.leftHindLeg.setPivot(0.5F, 22.7F, 2.0F);
+            this.leftHindLeg.pitch = ((float)Math.PI * 1.5F);
+            this.rightFrontLeg.pitch = 5.811947F;
+            this.rightFrontLeg.setPivot(-2.49F, 17.0F, -4.0F);
+            this.leftFrontLeg.pitch = 5.811947F;
+            this.leftFrontLeg.setPivot(0.51F, 17.0F, -4.0F);
+            this.tail.pitch = 1.9f;
+        } else {
+            this.torso.setPivot(0.0F, 14.0F, 2.0F);
+            this.torso.pitch = 1.5707964F;
+            this.neck.setPivot(-1.0F, 14.0F, -3.0F);
+            this.neck.pitch = this.torso.pitch;
+            this.tail.setPivot(-1.0F, 12.0F, 8.0F);
+            this.rightHindLeg.setPivot(-2.5F, 16.0F, 7.0F);
+            this.leftHindLeg.setPivot(0.5F, 16.0F, 7.0F);
+            this.rightFrontLeg.setPivot(-2.5F, 16.0F, -4.0F);
+            this.leftFrontLeg.setPivot(0.5F, 16.0F, -4.0F);
+            this.rightHindLeg.pitch = MathHelper.cos(f * 0.6662F) * 1.4F * g;
+            this.leftHindLeg.pitch = MathHelper.cos(f * 0.6662F + 3.1415927F) * 1.4F * g;
+            this.rightFrontLeg.pitch = MathHelper.cos(f * 0.6662F + 3.1415927F) * 1.4F * g;
+            this.leftFrontLeg.pitch = MathHelper.cos(f * 0.6662F) * 1.4F * g;
+            this.tail.pitch = (float)Math.PI / 1.7f;
+        }
     }
 
     public void setAngles(T wolfEntity, float f, float g, float h, float i, float j) {

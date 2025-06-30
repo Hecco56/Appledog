@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "appledog:block/applog_slab"
+    },
+    "type=double": {
+      "model": "appledog:block/applog"
+    },
+    "type=top": {
+      "model": "appledog:block/applog_slab_top"
+    }
+  }
+}
