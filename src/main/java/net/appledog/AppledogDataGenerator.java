@@ -8,10 +8,6 @@ public class AppledogDataGenerator implements DataGeneratorEntrypoint {
 	@Override
 	public void onInitializeDataGenerator(FabricDataGenerator fabricDataGenerator) {
 		FabricDataGenerator.Pack pack = fabricDataGenerator.createPack();
-		pack.addProvider(ADLangProvider::new);
 		pack.addProvider(ADModelProvider::new);
-		pack.addProvider(ADEntityLootTableProvider::new);
-		pack.addProvider(ADBlockLootTableProvider::new);
-		pack.addProvider(ADRecipeProvider::new);
 	}
 }

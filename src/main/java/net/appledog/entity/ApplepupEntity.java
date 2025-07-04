@@ -1,6 +1,8 @@
 package net.appledog.entity;
 
 import net.appledog.registry.ADEntities;
+import net.appledog.registry.ADSounds;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
@@ -16,18 +18,17 @@ import net.minecraft.entity.passive.FrogEntity;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BoneMealItem;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.particle.ParticleUtil;
+import net.minecraft.registry.Registries;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.StringIdentifiable;
-import net.minecraft.util.Util;
+import net.minecraft.util.*;
 import net.minecraft.util.function.ValueLists;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.intprovider.IntProvider;
@@ -39,6 +40,7 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.function.IntFunction;
 
 public class ApplepupEntity extends ShoulderEntity {
@@ -60,7 +62,7 @@ public class ApplepupEntity extends ShoulderEntity {
     }
 
     public static DefaultAttributeContainer.Builder createApplepupAttributes() {
-        return MobEntity.createMobAttributes().add(EntityAttributes.GENERIC_MAX_HEALTH, 12.0).add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 256.0);
+        return MobEntity.createMobAttributes().add(EntityAttributes.GENERIC_MAX_HEALTH, 12.0).add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 256.0).add(EntityAttributes.GENERIC_SCALE, 1);
     }
 
     protected SoundEvent getDeathSound() {
@@ -99,6 +101,20 @@ public class ApplepupEntity extends ShoulderEntity {
                 player.getStackInHand(hand).decrement(1);
             }
             return ActionResult.SUCCESS;
+        } else {
+            Item item = Items.DIRT;
+            if (FabricLoader.getInstance().isModLoaded("bountifulfares")) {
+                item = Registries.ITEM.get(Identifier.of("bountifulfares", "walnut_mulch"));
+            }
+            if (this.getAttributeInstance(EntityAttributes.GENERIC_SCALE) != null && player.getStackInHand(hand).isOf(item)) {
+                if (this.getAttributeValue(EntityAttributes.GENERIC_SCALE) < 16) {
+                    Objects.requireNonNull(this.getAttributeInstance(EntityAttributes.GENERIC_SCALE))
+                            .setBaseValue(this.getAttributeValue(EntityAttributes.GENERIC_SCALE) + 0.1f);
+                    playSound(SoundEvents.BLOCK_ROOTED_DIRT_BREAK, 0.5f, 1.0f);
+                    playSound(SoundEvents.ENTITY_GENERIC_EAT, 0.6f, 2.0f);
+                    return ActionResult.SUCCESS;
+                }
+            }
         }
         return super.interactMob(player, hand);
     }
@@ -123,9 +139,8 @@ public class ApplepupEntity extends ShoulderEntity {
 //            this.joyAnimationState.start(dataTracker.get(AGE));
 //            this.joyAnimationTimeout = 10;
 //        }
-        if (this.getWorld().isClient() && !this.joyAnimationState.isRunning()) {
-            this.joyAnimationState.start(this.age);
-        }
+
+        this.setAir(getMaxAir());
         if (dataTracker.get(AGE) >= 2400) {
             World world = this.getWorld();
             if (world instanceof ServerWorld serverWorld) {
@@ -147,7 +162,9 @@ public class ApplepupEntity extends ShoulderEntity {
                 }
             }
         }
+        if (this.getAttributeValue(EntityAttributes.GENERIC_SCALE) <= 1) {
         dataTracker.set(AGE, dataTracker.get(AGE) + 1);
+        }
         super.tick();
     }
 

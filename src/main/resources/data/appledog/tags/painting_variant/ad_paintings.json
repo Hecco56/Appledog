@@ -3,6 +3,10 @@
     {
       "id": "appledog:caninedy",
       "required": false
+    },
+    {
+      "id": "appledog:appleduke",
+      "required": false
     }
   ]
 }

@@ -37,6 +37,8 @@ public class ADItemGroups {
                         entries.add(ADBlocks.APPLOOD);
                         entries.add(ADBlocks.APPLEAVES);
                         entries.add(ADBlocks.APPLECOG);
+                        entries.add(ADItems.APPLEROCK);
+                        entries.add(ADItems.APPLEDOGLLAR);
                         displayContext.lookup().getOptionalWrapper(RegistryKeys.PAINTING_VARIANT).ifPresent((registryWrapper) -> {
                             addPaintings(entries, displayContext.lookup(), registryWrapper, (registryEntry) -> registryEntry.isIn(TagKey.of(RegistryKeys.PAINTING_VARIANT, Identifier.of(Appledog.MOD_ID, "ad_paintings"))), ItemGroup.StackVisibility.PARENT_AND_SEARCH_TABS);
                         });

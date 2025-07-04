@@ -2,6 +2,7 @@ package net.appledog.registry;
 
 import net.appledog.Appledog;
 import net.appledog.custom.ApplecogBlock;
+import net.appledog.custom.CoirBedBlock;
 import net.minecraft.block.*;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -17,6 +18,8 @@ public class ADBlocks {
     public static final Block APPLOOD = registerBlock("applood", new PillarBlock(AbstractBlock.Settings.copy(Blocks.OAK_WOOD)));
     public static final Block APPLEAVES = registerBlock("appleaves", new LeavesBlock(AbstractBlock.Settings.copy(Blocks.OAK_LEAVES)));
     public static final Block APPLECOG = registerBlock("applecog", new ApplecogBlock(AbstractBlock.Settings.create().nonOpaque()), Rarity.EPIC);
+
+    public static final Block COIR_BED = registerBlock("coir_bed", new CoirBedBlock(AbstractBlock.Settings.copy(Blocks.BROWN_BED)));
 
     public static Block registerBlock(String name, Block block) {
         registerBlockItem(name, block, Rarity.COMMON);

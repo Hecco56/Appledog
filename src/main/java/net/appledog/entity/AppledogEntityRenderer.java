@@ -4,9 +4,11 @@ import net.appledog.Appledog;
 import net.appledog.registry.ADModelLayers;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.*;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.MobEntityRenderer;
+import net.minecraft.client.render.item.ItemRenderer;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,6 +28,11 @@ public class AppledogEntityRenderer extends MobEntityRenderer<AppledogEntity, Ap
             }
         }
         return RED_DELICIOUS_TEXTURE;
+    }
+
+    @Override
+    public void render(AppledogEntity livingEntity, float f, float g, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i) {
+        super.render(livingEntity, f, g, matrixStack, vertexConsumerProvider, i);
     }
 
     @Nullable
