@@ -1,6 +1,8 @@
 package net.appledog.entity;
 
+import net.appledog.Appledog;
 import net.appledog.registry.ADEntities;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
@@ -11,27 +13,34 @@ import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.registry.Registries;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
+
 import org.jetbrains.annotations.Nullable;
 
 public class ApplepupEntity extends ShoulderEntity {
     private static final TrackedData<Integer> VARIANT = DataTracker.registerData(ApplepupEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<Integer> AGE = DataTracker.registerData(ApplepupEntity.class, TrackedDataHandlerRegistry.INTEGER);
+    public static final TrackedData<Float> SCALE = DataTracker.registerData(ApplepupEntity.class, TrackedDataHandlerRegistry.FLOAT);
 
     public final AnimationState joyAnimationState = new AnimationState();
     private int joyAnimationTimeout = 0;
     private int joyCooldown = Random.create().nextBetween(100, 1000);
+    public Box oldBB;
 
     public ApplepupEntity(EntityType<? extends ApplepupEntity> entityType, World world) {
         super(entityType, world);
@@ -55,6 +64,7 @@ public class ApplepupEntity extends ShoulderEntity {
     protected void initDataTracker() {
         this.dataTracker.startTracking(VARIANT, 0);
         this.dataTracker.startTracking(AGE, 0);
+        this.dataTracker.startTracking(SCALE, 1f);
         super.initDataTracker();
     }
 
@@ -63,12 +73,14 @@ public class ApplepupEntity extends ShoulderEntity {
         super.writeCustomDataToNbt(nbt);
         nbt.putInt("Variant", this.getVariant().getId());
         nbt.putInt("Age", dataTracker.get(AGE));
+        nbt.putFloat("Scale", dataTracker.get(SCALE));
     }
 
     public void readCustomDataFromNbt(NbtCompound nbt) {
         super.readCustomDataFromNbt(nbt);
         this.setVariant(AppledogEntity.Variant.byId(nbt.getInt("Variant")));
         this.setAge(nbt.getInt("Age"));
+        this.dataTracker.set(SCALE, nbt.getFloat("Scale"));
     }
 
     @Override
@@ -83,6 +95,19 @@ public class ApplepupEntity extends ShoulderEntity {
                 player.getStackInHand(hand).decrement(1);
             }
             return ActionResult.SUCCESS;
+        } else {
+            Item item = Items.DIRT;
+            if (FabricLoader.getInstance().isModLoaded("bountifulfares")) {
+                item = Registries.ITEM.get(Identifier.of("bountifulfares", "walnut_mulch"));
+            }
+            if (this.dataTracker.get(SCALE) != null && player.getStackInHand(hand).isOf(item)) {
+                if (this.dataTracker.get(SCALE) < 16) {
+                    this.dataTracker.set(SCALE, this.dataTracker.get(SCALE) + 0.1f);
+                    playSound(SoundEvents.BLOCK_ROOTED_DIRT_BREAK, 0.5f, 1.0f);
+                    playSound(SoundEvents.ENTITY_GENERIC_EAT, 0.6f, 2.0f);
+                    return ActionResult.SUCCESS;
+                }
+            }
         }
         return super.interactMob(player, hand);
     }
@@ -107,9 +132,7 @@ public class ApplepupEntity extends ShoulderEntity {
 //            this.joyAnimationState.start(dataTracker.get(AGE));
 //            this.joyAnimationTimeout = 10;
 //        }
-        if (this.getWorld().isClient() && !this.joyAnimationState.isRunning()) {
-            this.joyAnimationState.start(this.age);
-        }
+        this.setAir(getMaxAir());
         if (dataTracker.get(AGE) >= 2400) {
             World world = this.getWorld();
             if (world instanceof ServerWorld serverWorld) {
@@ -125,13 +148,16 @@ public class ApplepupEntity extends ShoulderEntity {
                     }
 
                     appledogEntity.setPersistent();
-                    //appledogEntity.recalculateDimensions(this.getDimensions(this.getPose()));
+                    appledogEntity.calculateDimensions();
                     serverWorld.spawnEntityAndPassengers(appledogEntity);
                     this.discard();
                 }
             }
         }
-        dataTracker.set(AGE, dataTracker.get(AGE) + 1);
+        if (this.dataTracker.get(SCALE) <= 1) {
+            dataTracker.set(AGE, dataTracker.get(AGE) + 1);
+        }
+
         super.tick();
     }
 
@@ -163,11 +189,8 @@ public class ApplepupEntity extends ShoulderEntity {
         }
     }
 
-
-
     @Override
     public @Nullable PassiveEntity createChild(ServerWorld world, PassiveEntity entity) {
         return null;
     }
-
 }

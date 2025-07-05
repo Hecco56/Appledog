@@ -3,6 +3,7 @@ package net.appledog.registry;
 import net.appledog.Appledog;
 import net.appledog.entity.AppledogEntity;
 import net.appledog.entity.ApplepupEntity;
+import net.appledog.entity.ApplerockEntity;
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -17,7 +18,10 @@ public class ADEntities {
             .setDimensions(0.6F, 0.85F).maxTrackingRange(10).build("appledog")); //.eyeHeight(0.68F).passengerAttachments(new Vec3d(0.0, 0.81875, -0.0625))
 
     public static final EntityType<ApplepupEntity> APPLEPUP = register("applepup", EntityType.Builder.create(ApplepupEntity::new, SpawnGroup.CREATURE)
-            .setDimensions(0.5F, 0.5F).build("applepup")); //.eyeHeight(0.68F).maxTrackingRange(10)
+            .setDimensions(0.4F, 0.4F).maxTrackingRange(10).build("applepup")); //.eyeHeight(0.68F).maxTrackingRange(10)
+
+    public static final EntityType<ApplerockEntity> APPLEROCK = register("applerock", EntityType.Builder.<ApplerockEntity>create(ApplerockEntity::new, SpawnGroup.MISC)
+            .setDimensions(0.25F, 0.25F).maxTrackingRange(4).trackingTickInterval(10).build("applerock"));
 
     private static <T extends Entity, E extends EntityType<T>> EntityType<T> register(String id, E entity) {
         return Registry.register(Registries.ENTITY_TYPE, Identifier.of(Appledog.MOD_ID, id), entity);

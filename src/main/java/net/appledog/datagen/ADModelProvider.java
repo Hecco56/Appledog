@@ -25,5 +25,7 @@ public class ADModelProvider extends FabricModelProvider {
         itemModelGenerator.register(ADItems.APPLEDOG_SPAWN_EGG, new Model(Optional.of(Identifier.tryParse("item/template_spawn_egg")), Optional.empty()));
         itemModelGenerator.register(ADItems.APPLEPUP_SPAWN_EGG, new Model(Optional.of(Identifier.tryParse("item/template_spawn_egg")), Optional.empty()));
         itemModelGenerator.register(ADItems.APPLESAUCE, Models.GENERATED);
+        itemModelGenerator.register(ADItems.APPLEDOGLLAR, Models.GENERATED);
+        itemModelGenerator.register(ADItems.APPLEROCK, Models.GENERATED);
     }
 }

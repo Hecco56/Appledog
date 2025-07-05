@@ -5,8 +5,10 @@ import net.appledog.registry.ADModelLayers;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.MobEntityRenderer;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
@@ -17,6 +19,14 @@ public class AppledogEntityRenderer extends MobEntityRenderer<AppledogEntity, Ap
         super(context, new AppledogEntityModel<>(context.getPart(ADModelLayers.APPLEDOG)), 0.5F);
         this.addFeature(new AppledogCollarFeatureRenderer(this));
     }
+
+    @Override
+    public void render(AppledogEntity livingEntity, float f, float g, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i) {
+        float scale = livingEntity.getDataTracker().get(livingEntity.SCALE);
+        matrixStack.scale(scale, scale, scale);
+        super.render(livingEntity, f, g, matrixStack, vertexConsumerProvider, i);
+    }
+
     @Override
     public Identifier getTexture(AppledogEntity entity) {
         AppledogEntity.Variant[] variants = AppledogEntity.Variant.values();

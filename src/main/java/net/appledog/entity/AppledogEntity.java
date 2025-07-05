@@ -20,6 +20,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.recipe.Ingredient;
+import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
@@ -40,6 +41,7 @@ import java.util.function.IntFunction;
 public class AppledogEntity extends TameableEntity {
     private static final TrackedData<Integer> VARIANT = DataTracker.registerData(AppledogEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<Integer> COLLAR_COLOR = DataTracker.registerData(AppledogEntity.class, TrackedDataHandlerRegistry.INTEGER);
+    public static final TrackedData<Float> SCALE = DataTracker.registerData(AppledogEntity.class, TrackedDataHandlerRegistry.FLOAT);
     public AppledogEntity(EntityType<? extends AppledogEntity> entityType, World world) {
         super(entityType, world);
         this.setPathfindingPenalty(PathNodeType.POWDER_SNOW, -1.0F);
@@ -47,8 +49,10 @@ public class AppledogEntity extends TameableEntity {
     }
 
     public static boolean canSpawn(EntityType<AppledogEntity> appledogEntityEntityType, ServerWorldAccess serverWorldAccess, SpawnReason spawnReason, BlockPos blockPos, Random random) {
-        return blockPos.getX() < -205 && blockPos.getX() > -305 && blockPos.getZ() > 19 && blockPos.getZ() < 119;
+        int range = 50;
+        return blockPos.getY() > 40 && (blockPos.getX() < -255 + range && blockPos.getX() > -255 - range && blockPos.getZ() > 69 - range && blockPos.getZ() < 69 + range) && random.nextFloat() < 0.5f;
     }
+
 
     protected void initGoals() {
         this.goalSelector.add(1, new SwimGoal(this));
@@ -138,10 +142,40 @@ public class AppledogEntity extends TameableEntity {
 
     }
 
+    private ActionResult returnItem(ItemStack handStack, PlayerEntity player, ItemStack stack) {
+        this.dropStack(stack);
+        playSound(SoundEvents.ENTITY_CHICKEN_EGG, 1, 1);
+        playSound(SoundEvents.ENTITY_WOLF_AMBIENT, 0.6f, 1.2f);
+        if (!player.isCreative()) {
+            handStack.decrement(1);
+        }
+        return ActionResult.SUCCESS;
+    }
+
     public ActionResult interactMob(PlayerEntity player, Hand hand) {
         ItemStack itemStack = player.getStackInHand(hand);
         Item item = itemStack.getItem();
         if (!this.getWorld().isClient || this.isBaby() && this.isBreedingItem(itemStack)) {
+            if (itemStack.isOf(Items.IRON_INGOT)) {
+                return returnItem(itemStack, player, ADBlocks.APPLECOG.asItem().getDefaultStack());
+            }
+            if (itemStack.isIn(ItemTags.LEAVES)) {
+                return returnItem(itemStack, player, ADItems.APPLEDOGLLAR.getDefaultStack().copyWithCount(4));
+            }
+            if (itemStack.isIn(ItemTags.STONE_CRAFTING_MATERIALS)) {
+                return returnItem(itemStack, player, ADItems.APPLEROCK.getDefaultStack().copyWithCount(8));
+            }
+            if (itemStack.isIn(ItemTags.LOGS)) {
+                return returnItem(itemStack, player, ADBlocks.APPLOG.asItem().getDefaultStack());
+            }
+            if (itemStack.isOf(Items.PAINTING)) {
+                ItemStack stack = new ItemStack(Items.PAINTING);
+                NbtCompound nbt = new NbtCompound();
+                nbt.putString("id", "minecraft:painting");
+                nbt.putString("variant", "appledog:caninedy");
+                stack.setNbt(nbt);
+                return returnItem(itemStack, player, stack);
+            }
             if (this.isTamed()) {
                 ActionResult actionResult = super.interactMob(player, hand);
                 if (this.isBreedingItem(itemStack) && this.getHealth() < this.getMaxHealth()) {
@@ -150,7 +184,7 @@ public class AppledogEntity extends TameableEntity {
                     }
                     FoodComponent foodComponent = itemStack.getItem().getFoodComponent();
                     float f = foodComponent != null ? (float)foodComponent.getHunger() : 1.0F;
-                    this.heal(2.0F * f);
+                    this.heal(5.0F * f);
                     return ActionResult.success(this.getWorld().isClient());
                 } else if (item instanceof DyeItem) {
                     DyeItem dyeItem = (DyeItem)item;
@@ -174,9 +208,6 @@ public class AppledogEntity extends TameableEntity {
                 }
                 return super.interactMob(player, hand);
             } else if (itemStack.isOf(Items.APPLE)) {
-                if (!player.isCreative()) {
-                    itemStack.decrement(1);
-                }
                 this.tryTame(player);
                 return ActionResult.SUCCESS;
             } else if (itemStack.isOf(ADItems.APPLESAUCE)) {
@@ -201,6 +232,15 @@ public class AppledogEntity extends TameableEntity {
         return this.isInSittingPose() ? 20 : super.getMaxLookPitchChange();
     }
 
+    @Override
+    public boolean canImmediatelyDespawn(double distanceSquared) {
+        return false;
+    }
+
+    @Override
+    public boolean cannotDespawn() {
+        return true;
+    }
 
     private void tryTame(PlayerEntity player) {
         if (this.random.nextInt(20) == 0) {
@@ -242,16 +282,16 @@ public class AppledogEntity extends TameableEntity {
                 this.discard();
                 playSound(ADSounds.APPLEDOG_SAUCIFY, 1, 1);
                 for (int i = 0; i < 100; i++) {
-                    double x = this.getX() + (random.nextFloat()-0.5);
-                    double y = this.getY() + 0.5 + (random.nextFloat()-0.5);
-                    double z = this.getZ() + (random.nextFloat()-0.5);
-                    this.getWorld().addParticle(ADEntities.APPLESAUCE, x, y, z,  -(this.getX()-x)/1.2, -(this.getY()-y)/2, -(this.getZ()-z)/1.2);
+                    double x = this.getX() + (random.nextFloat() - 0.5);
+                    double y = this.getY() + 0.5 + (random.nextFloat() - 0.5);
+                    double z = this.getZ() + (random.nextFloat() - 0.5);
+                    this.getWorld().addParticle(ADEntities.APPLESAUCE, x, y, z, -(this.getX() - x) / 1.2, -(this.getY() - y) / 2, -(this.getZ() - z) / 1.2);
                 }
                 for (int i = 0; i < 300; i++) {
-                    double x = this.getX() + (random.nextFloat()-0.5);
-                    double y = this.getY() + 0.5 + (random.nextFloat()-0.5);
-                    double z = this.getZ() + (random.nextFloat()-0.5);
-                    this.getWorld().addParticle(ADEntities.APPLESAUCE, x, y, z,  -(this.getX()-x)/6, -(this.getY()-y)/6, -(this.getZ()-z)/6);
+                    double x = this.getX() + (random.nextFloat() - 0.5);
+                    double y = this.getY() + 0.5 + (random.nextFloat() - 0.5);
+                    double z = this.getZ() + (random.nextFloat() - 0.5);
+                    this.getWorld().addParticle(ADEntities.APPLESAUCE, x, y, z, -(this.getX() - x) / 6, -(this.getY() - y) / 6, -(this.getZ() - z) / 6);
                 }
             } else {
                 for (int i = 0; i < 4; i++) {
@@ -260,6 +300,7 @@ public class AppledogEntity extends TameableEntity {
                     double z = this.getZ() + (random.nextFloat()-0.5);
                     this.getWorld().addParticle(ADEntities.APPLESAUCE, x, y, z,  -(this.getX()-x)/6, -(this.getY()-y)/6, -(this.getZ()-z)/6);
                 }
+                player.getHungerManager().add(2, 1f);
             }
         }
         if (this.isInvulnerableTo(source)) {
@@ -280,6 +321,7 @@ public class AppledogEntity extends TameableEntity {
     protected void initDataTracker() {
         this.dataTracker.startTracking(VARIANT, 0);
         this.dataTracker.startTracking(COLLAR_COLOR, DyeColor.GREEN.getId());
+        this.dataTracker.startTracking(SCALE, 1f);
         super.initDataTracker();
     }
 
@@ -291,11 +333,16 @@ public class AppledogEntity extends TameableEntity {
         this.dataTracker.set(COLLAR_COLOR, color.getId());
     }
 
+    private void setDigestion(int digestion) {
+        this.dataTracker.set(COLLAR_COLOR, digestion);
+    }
+
     @Override
     public void writeCustomDataToNbt(NbtCompound nbt) {
         super.writeCustomDataToNbt(nbt);
         nbt.putInt("Variant", this.getVariant().getId());
         nbt.putByte("CollarColor", (byte)this.getCollarColor().getId());
+        nbt.putFloat("Scale", dataTracker.get(SCALE));
     }
 
     public void readCustomDataFromNbt(NbtCompound nbt) {
@@ -304,6 +351,7 @@ public class AppledogEntity extends TameableEntity {
         if (nbt.contains("CollarColor", 99)) {
             this.setCollarColor(DyeColor.byId(nbt.getInt("CollarColor")));
         }
+        this.dataTracker.set(SCALE, nbt.getFloat("Scale"));
     }
 
     public void setVariant(Variant variant) {

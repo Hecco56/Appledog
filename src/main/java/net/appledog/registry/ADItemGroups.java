@@ -23,6 +23,8 @@ public class ADItemGroups {
                         entries.add(ADBlocks.APPLOOD);
                         entries.add(ADBlocks.APPLEAVES);
                         entries.add(ADBlocks.APPLECOG);
+                        entries.add(ADItems.APPLEROCK);
+                        entries.add(ADItems.APPLEDOGLLAR);
                     }).build());
 
     public static void loadItemGroups() {

@@ -29,7 +29,7 @@ public class ADRecipeProvider extends FabricRecipeProvider {
                 .pattern("#A#")
                 .pattern(" # ")
                 .input('#', Items.IRON_INGOT)
-                .input('A', ADItems.DOGAPPLE)
+                .input('A', Items.APPLE)
                 .criterion(hasItem(ADItems.DOGAPPLE), conditionsFromItem(ADItems.DOGAPPLE))
                 .offerTo(recipeExporter);
 

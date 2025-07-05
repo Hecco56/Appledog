@@ -8,6 +8,7 @@ import net.minecraft.util.Identifier;
 
 public class ADPaintingVarients {
     public static final PaintingVariant CANINEDY = Registry.register(Registries.PAINTING_VARIANT, Identifier.of(Appledog.MOD_ID, "caninedy"), new PaintingVariant(64, 64));
+    public static final PaintingVariant APPLEDUKE = Registry.register(Registries.PAINTING_VARIANT, Identifier.of(Appledog.MOD_ID, "appleduke"), new PaintingVariant(16, 16));
 
     public static void loadPaintingVarients() {
     }
