@@ -1,4 +1,4 @@
-package net.appledog.registry;
+package net.appledog.custom;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -9,6 +9,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
+
 
 public class DogappleItem extends Item {
     public DogappleItem(Settings settings) {
@@ -39,5 +40,4 @@ public class DogappleItem extends Item {
         }
         super.inventoryTick(stack, world, entity, slot, selected);
     }
-
 }

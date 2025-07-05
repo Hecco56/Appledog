@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "appledog:block/applog_horizontal",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y": {
+      "model": "appledog:block/applog"
+    },
+    "axis=z": {
+      "model": "appledog:block/applog_horizontal",
+      "x": 90
+    }
+  }
+}

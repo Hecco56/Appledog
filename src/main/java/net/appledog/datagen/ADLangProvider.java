@@ -2,15 +2,12 @@ package net.appledog.datagen;
 
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
-import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
-import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.Identifier;
 
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-import java.util.concurrent.CompletableFuture;
 
 import static net.appledog.Appledog.MOD_ID;
 
@@ -31,8 +28,17 @@ public class ADLangProvider extends FabricLanguageProvider {
 
     @Override
     public void generateTranslations(TranslationBuilder translationBuilder) {
-        generate(translationBuilder, "itemgroup.appledog", "Appledog Appledog Mod Appledog");
+        generate(translationBuilder, "itemgroup.appledog", "appledog!");
         generate(translationBuilder, "entity.appledog.appledog", "Appledog");
+        generate(translationBuilder, "entity.appledog.applepup", "Applepup");
+        generate(translationBuilder, "entity.appledog.applepup", "Applepup");
+        generate(translationBuilder, "painting.appledog.caninedy.title", "Caninedy");
+        generate(translationBuilder, "painting.appledog.appleduke.title", "Appleduke");
+        generate(translationBuilder, "painting.appledog.appleduke.author", "§kappledog");
+        generate(translationBuilder, "painting.appledog.caninedy.author", "§kappledog");
+        generate(translationBuilder, "death.attack.salted_dogapple_bite", "%1$s's hand was bit off by Salted Dogapple");
+        generate(translationBuilder, "subtitles.appledog.appledog.saucify", "Appledog saucifies");
+        generate(translationBuilder, "subtitles.appledog.appledog.hurt", "Appledog gets bitten");
         for (Identifier id : allItemIdsInNamespace(MOD_ID)) {
             String key = Registries.ITEM.get(id).getTranslationKey();
             if (usedTranslationKeys.contains(key)) {

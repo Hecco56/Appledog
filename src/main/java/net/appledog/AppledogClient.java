@@ -1,25 +1,42 @@
 package net.appledog;
 
+import net.appledog.custom.ApplesauceParticle;
+import net.appledog.custom.CoirBedBlockEnitityRenderer;
+import net.appledog.custom.DogappleItem;
+import net.appledog.entity.ApplepupEntityModel;
+import net.appledog.entity.ApplepupEntityRenderer;
+import net.appledog.registry.*;
 import net.appledog.entity.AppledogEntityModel;
 import net.appledog.entity.AppledogEntityRenderer;
-import net.appledog.registry.ADEntities;
-import net.appledog.registry.ADItems;
-import net.appledog.registry.ADModelLayers;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
+import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
+import net.minecraft.client.color.world.BiomeColors;
+import net.minecraft.client.color.world.FoliageColors;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
+import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
+import net.minecraft.client.render.entity.FlyingItemEntityRenderer;
+import net.minecraft.client.render.entity.ProjectileEntityRenderer;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.ColorHelper;
 
 @Environment(EnvType.CLIENT)
 public class AppledogClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         EntityModelLayerRegistry.registerModelLayer(ADModelLayers.APPLEDOG, AppledogEntityModel::getTexturedModelData);
+        EntityModelLayerRegistry.registerModelLayer(ADModelLayers.APPLEPUP, ApplepupEntityModel::getTexturedModelData);
         EntityRendererRegistry.register(ADEntities.APPLEDOG, AppledogEntityRenderer::new);
-        ModelPredicateProviderRegistry.register(ADItems.DOGAPPLE, new Identifier("animation"), (itemStack, clientWorld, livingEntity, seed) -> {
+        EntityRendererRegistry.register(ADEntities.APPLEPUP, ApplepupEntityRenderer::new);
+        EntityRendererRegistry.register(ADEntities.APPLEROCK, FlyingItemEntityRenderer::new);
+        ParticleFactoryRegistry.getInstance().register(ADEntities.APPLESAUCE, ApplesauceParticle.Factory::new);
+        ModelPredicateProviderRegistry.register(ADItems.DOGAPPLE, Identifier.tryParse("animation"), (itemStack, clientWorld, livingEntity, seed) -> {
             if (itemStack.getNbt() != null && itemStack.getNbt().contains("dogapple_animation")) {
                 int animation = itemStack.getNbt().getInt("dogapple_animation");
                 if (animation > 13) {
@@ -34,5 +51,27 @@ public class AppledogClient implements ClientModInitializer {
             }
             return 0;
         });
+        ModelPredicateProviderRegistry.register(ADItems.CANDIED_DOGAPPLE, Identifier.tryParse("animation"), (itemStack, clientWorld, livingEntity, seed) -> {
+            if (itemStack.getNbt() != null && itemStack.getNbt().contains("dogapple_animation")) {
+                int animation = itemStack.getNbt().getInt("dogapple_animation");
+                return animation == 15 ? 1 : 0;
+            }
+            return 0;
+        });
+
+        ModelPredicateProviderRegistry.register(ADItems.SALTED_DOGAPPLE, Identifier.tryParse("animation"), (itemStack, clientWorld, livingEntity, seed) -> {
+            if (itemStack.getNbt() != null && itemStack.getNbt().contains("dogapple_animation")) {
+                int animation = itemStack.getNbt().getInt("dogapple_animation");
+                return animation <= 1 ? 0 : 1;
+            }
+            return 0;
+        });
+
+        ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) -> world != null && pos != null ? BiomeColors.getFoliageColor(world, pos)
+                        : FoliageColors.getDefaultColor(),
+                ADBlocks.APPLEAVES);
+        ColorProviderRegistry.ITEM.register((stack, tintIndex) -> ColorHelper.Argb.getAlpha(FoliageColors.getDefaultColor()), ADBlocks.APPLEAVES);
+        BlockRenderLayerMap.INSTANCE.putBlock(ADBlocks.APPLECOG, RenderLayer.getCutout());
+        BlockEntityRendererFactories.register(Appledog.COIR_BED_BLOCK_ENTITY, CoirBedBlockEnitityRenderer::new);
     }
 }
