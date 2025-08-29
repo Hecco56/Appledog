@@ -7,6 +7,10 @@
     {
       "id": "appledog:appleduke",
       "required": false
+    },
+    {
+      "id": "appledog:orchard",
+      "required": false
     }
   ]
 }
